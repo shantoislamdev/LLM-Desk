@@ -44,8 +44,8 @@ func (s *Storage) GetDataDir() string {
 
 // Load reads providers from the JSON file and injects keys from keyring
 func (s *Storage) Load() ([]models.Provider, error) {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
+	s.mu.Lock()
+	defer s.mu.Unlock()
 
 	data, err := os.ReadFile(s.filename)
 	if err != nil {
@@ -84,20 +84,28 @@ func (s *Storage) Load() ([]models.Provider, error) {
 	}
 
 	// 3. If migration happened, we need to save the scrubbed version to JSON
+	// Since we hold the Lock, this is safe and atomic.
 	if needsMigration {
-		go func() {
-			s.Save(providers)
-		}()
+		if err := s.saveToFile(providers); err != nil {
+			// We continue even if save fails, but log it would be ideal
+			// For now just return the providers as they are valid in memory
+		}
 	}
 
 	return providers, nil
 }
 
 // Save writes providers to the JSON file after securely storing keys in keyring
+// Save writes providers to the JSON file after securely storing keys in keyring
 func (s *Storage) Save(providers []models.Provider) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+	return s.saveToFile(providers)
+}
 
+// saveToFile writes providers to JSON, scrubbing sensitive keys.
+// NOTE: Caller MUST hold s.mu.Lock()
+func (s *Storage) saveToFile(providers []models.Provider) error {
 	// Create a sanitized copy for JSON storage (scrubbed of keys)
 	scrubbed := make([]models.Provider, len(providers))
 	for i, p := range providers {
