@@ -67,7 +67,7 @@ func main() {
 			Appearance: mac.NSAppearanceNameDarkAqua,
 			About: &mac.AboutInfo{
 				Title:   "LLM Desk",
-				Message: "LLM Provider Management Desktop Application\nVersion 1.0.0\n© 2026 LLM Desk",
+				Message: "LLM Provider Management Desktop Application\nVersion 0.0.1\n© 2026 LLM Desk",
 			},
 		},
 	})

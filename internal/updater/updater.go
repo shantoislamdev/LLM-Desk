@@ -66,7 +66,7 @@ func CheckForUpdates() (*UpdateInfo, error) {
 	}
 
 	currentVersion := version.Version
-	// Simple version comparison (e.g., v1.0.1 vs v1.0.0)
+	// Simple version comparison (e.g., v0.0.2 vs v0.0.1)
 	// In production, you might want a more robust semver parser
 	if !isNewer(release.TagName, currentVersion) {
 		return &UpdateInfo{Available: false}, nil
@@ -94,7 +94,7 @@ func isNewer(latest, current string) bool {
 	latest = strings.TrimPrefix(latest, "v")
 	current = strings.TrimPrefix(current, "v")
 
-	if current == "1.0.0-dev" || current == "none" {
+	if current == "0.0.1-dev" || current == "none" {
 		return false // Don't prompt for updates in dev mode
 	}
 

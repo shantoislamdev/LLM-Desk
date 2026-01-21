@@ -296,7 +296,7 @@ export const Settings: React.FC<SettingsProps> = ({
                     <div className="setting-row__info">
                         <h4 className="setting-row__label">Check for Updates</h4>
                         <p className="setting-row__description">
-                            Current Version: <span className="text-secondary">v1.0.0</span>
+                            Current Version: <span className="text-secondary">v0.0.1</span>
                         </p>
                     </div>
                     <button

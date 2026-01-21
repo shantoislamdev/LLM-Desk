@@ -10,7 +10,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-const schemaVersion = "1.0.0"
+const schemaVersion = "0.0.1"
 
 // ExportService handles data import/export operations
 type ExportService struct {

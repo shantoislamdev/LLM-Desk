@@ -12,7 +12,7 @@ if (typeof window !== 'undefined') {
     (window as any).go = {
         main: {
             App: {
-                GetVersion: () => Promise.resolve('v1.0.0-test'),
+                GetVersion: () => Promise.resolve('v0.0.1-test'),
             },
         },
     };
