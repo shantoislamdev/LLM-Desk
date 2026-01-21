@@ -95,7 +95,7 @@ export const Settings: React.FC<SettingsProps> = React.memo(({
                     </button>
                 </div>
 
-                <div className={`setting-row ${followSystem ? 'setting-row--disabled' : ''}`}>
+                <div className={`setting-row setting-row--divider ${followSystem ? 'setting-row--disabled' : ''}`}>
                     <div className="setting-row__info">
                         <h4 className="setting-row__label">Theme Preference</h4>
                         <p className="setting-row__description">Switch between light and dark mode.</p>

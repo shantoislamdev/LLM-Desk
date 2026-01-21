@@ -4,7 +4,7 @@ import { updater } from '../../wailsjs/go/models';
 
 export function useSettings() {
     const [theme, setThemeState] = useState<string>('dark');
-    const [followSystem, setFollowSystemState] = useState<boolean>(false);
+    const [followSystem, setFollowSystemState] = useState<boolean>(true);
     const [crashReporting, setCrashReportingState] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState(true);
     const [updateInfo, setUpdateInfo] = useState<updater.UpdateInfo | null>(null);
