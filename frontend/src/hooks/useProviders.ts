@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { Provider, Model } from '@/types';
 import {
     GetAllProviders,
@@ -295,7 +295,7 @@ export function useProviders() {
         }
     }, []);
 
-    return {
+    return useMemo(() => ({
         providers,
         selectedProvider,
         setSelectedProvider,
@@ -316,5 +316,23 @@ export function useProviders() {
         // Utilities
         createDefaultProvider,
         createDefaultModel
-    };
+    }), [
+        providers,
+        selectedProvider,
+        // setSelectedProvider is stable (useState setter)
+        updateProviderKeys,
+        clearAllData,
+        isLoading,
+        addProvider,
+        updateProvider,
+        deleteProvider,
+        addModel,
+        updateModel,
+        deleteModel,
+        exportData,
+        importDataFromFile
+        // createDefaultProvider/Model are static functions, could be moved out of hook or memoized if constructed here (they are function declarations outside currently?)
+        // Actually, createDefaultProvider/Model serve as utilities. If they are defined outside, they are stable.
+        // Looking at file content, they are defined outside.
+    ]);
 }

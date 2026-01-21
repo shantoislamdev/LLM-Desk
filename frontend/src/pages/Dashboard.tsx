@@ -30,7 +30,7 @@ interface DashboardProps {
     onNavigateToAddProvider?: () => void;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({
+export const Dashboard: React.FC<DashboardProps> = React.memo(({
     providers,
     onNavigateToSettings,
     onNavigateToAddProvider
@@ -217,4 +217,4 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </div>
         </div>
     );
-};
+});

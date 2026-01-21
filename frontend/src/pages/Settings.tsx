@@ -16,7 +16,7 @@ interface SettingsProps {
 
 type ImportStatus = 'idle' | 'loading' | 'success' | 'error';
 
-export const Settings: React.FC<SettingsProps> = ({
+export const Settings: React.FC<SettingsProps> = React.memo(({
     theme,
     toggleTheme,
     onClearData,
@@ -338,5 +338,5 @@ export const Settings: React.FC<SettingsProps> = ({
 
         </div>
     );
-};
+});
 

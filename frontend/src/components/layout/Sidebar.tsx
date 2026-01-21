@@ -16,7 +16,7 @@ interface SidebarProps {
     onProviderSelect: (provider: Provider) => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({
+export const Sidebar: React.FC<SidebarProps> = React.memo(({
     view,
     providers,
     selectedProvider,
@@ -68,4 +68,4 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
         </aside>
     );
-};
+});

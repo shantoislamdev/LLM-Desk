@@ -10,7 +10,7 @@ interface ProvidersListProps {
     onNavigateToSettings?: () => void;
 }
 
-export const ProvidersList: React.FC<ProvidersListProps> = ({
+export const ProvidersList: React.FC<ProvidersListProps> = React.memo(({
     providers,
     onSelect,
     onAddProvider,
@@ -115,4 +115,4 @@ export const ProvidersList: React.FC<ProvidersListProps> = ({
             </div>
         </div>
     );
-};
+});
