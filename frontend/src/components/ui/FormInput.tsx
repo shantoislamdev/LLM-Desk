@@ -31,7 +31,7 @@ export const FormInput: React.FC<FormInputProps> = ({
         <div className="form-group">
             <label htmlFor={name} className="form-label">
                 {label}
-                {required && <span className="text-accent"> *</span>}
+                {required && <span className="u-text-accent"> *</span>}
             </label>
             <input
                 id={name}

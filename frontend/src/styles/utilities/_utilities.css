@@ -1,31 +1,31 @@
 /* ========================================
    Utility Classes
    ======================================== */
-.pb-mobile { padding-bottom: var(--space-20); }
-@media (min-width: 768px) { .pb-mobile { padding-bottom: 0; } }
+.u-pb-mobile { padding-bottom: var(--space-20); }
+@media (min-width: 768px) { .u-pb-mobile { padding-bottom: 0; } }
 
-.hidden-mobile { display: none; }
-@media (min-width: 768px) { .hidden-mobile { display: block; } }
+.u-hidden-mobile { display: none; }
+@media (min-width: 768px) { .u-hidden-mobile { display: block; } }
 
-.hidden-desktop { display: block; }
-@media (min-width: 768px) { .hidden-desktop { display: none; } }
+.u-hidden-desktop { display: block; }
+@media (min-width: 768px) { .u-hidden-desktop { display: none; } }
 
-.text-accent { color: var(--color-accent); }
-.text-muted { color: var(--color-text-muted); }
-.text-secondary { color: var(--color-text-secondary); }
+.u-text-accent { color: var(--color-accent); }
+.u-text-muted { color: var(--color-text-muted); }
+.u-text-secondary { color: var(--color-text-secondary); }
 
-.font-mono { font-family: var(--font-mono); }
-.font-serif { font-family: var(--font-serif); }
+.u-font-mono { font-family: var(--font-mono); }
+.u-font-serif { font-family: var(--font-serif); }
 
-.truncate {
+.u-truncate {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.col-span-full { grid-column: 1 / -1; }
+.u-col-span-full { grid-column: 1 / -1; }
 
 /* Spacing helpers */
-.mb-6 { margin-bottom: var(--space-6); }
-.mb-8 { margin-bottom: var(--space-8); }
-.gap-6 { gap: var(--space-6); }
+.u-mb-6 { margin-bottom: var(--space-6); }
+.u-mb-8 { margin-bottom: var(--space-8); }
+.u-gap-6 { gap: var(--space-6); }

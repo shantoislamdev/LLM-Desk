@@ -20,7 +20,9 @@
 @import './components/_forms.css';
 @import './components/_modals.css';
 @import './components/_tables.css';
-@import './components/_misc.css';
+@import './components/_key-manager.css';
+@import './components/_inventory.css';
+@import './components/_model-list.css';
 @import './components/_empty-state.css';
 
 /* Pages Layer */

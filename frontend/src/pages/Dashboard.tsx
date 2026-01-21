@@ -72,21 +72,21 @@ export const Dashboard: React.FC<DashboardProps> = React.memo(({
     // Empty state - Welcome screen
     if (providers.length === 0) {
         return (
-            <div className="animate-fade-in pb-mobile">
-                <div className="welcome-container">
-                    <div className="welcome-header">
-                        <span className="welcome-badge">
+            <div className="animate-fade-in u-pb-mobile">
+                <div className="welcome">
+                    <div className="welcome__header">
+                        <span className="welcome__badge">
                             <Sparkles size={14} />
                             Getting Started
                         </span>
-                        <h1 className="welcome-title">Welcome to LLM Desk</h1>
-                        <p className="welcome-subtitle">
+                        <h1 className="welcome__title">Welcome to LLM Desk</h1>
+                        <p className="welcome__subtitle">
                             Your personal dashboard for managing LLM providers and models.
                             Get started by importing your configuration or adding providers manually.
                         </p>
                     </div>
 
-                    <div className="welcome-grid">
+                    <div className="welcome__grid">
                         <div className="welcome-card" onClick={onNavigateToSettings}>
                             <div className="welcome-card__icon">
                                 <Download size={24} />
@@ -115,7 +115,7 @@ export const Dashboard: React.FC<DashboardProps> = React.memo(({
     }
 
     return (
-        <div className="animate-fade-in pb-mobile">
+        <div className="animate-fade-in u-pb-mobile">
             <div className="page-header">
                 <div>
                     <h1 className="page-title">Overview</h1>
@@ -126,7 +126,7 @@ export const Dashboard: React.FC<DashboardProps> = React.memo(({
                 </div>
             </div>
 
-            <div className="grid-4 mb-6">
+            <div className="grid--cols-4 u-mb-6">
                 <Card className="stat-card">
                     <div className="stat-card__header">
                         <Box size={16} />
@@ -163,9 +163,9 @@ export const Dashboard: React.FC<DashboardProps> = React.memo(({
                     <div className="chart-container">
                         <ResponsiveContainer width="100%" height="100%" debounce={50}>
                             <BarChart data={costData} layout="vertical" margin={{ top: 0, right: 30, left: 20, bottom: 5 }}>
-                                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="currentColor" className="text-muted" opacity={0.5} />
+                                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="currentColor" className="u-text-muted" opacity={0.5} />
                                 <XAxis type="number" hide />
-                                <YAxis dataKey="name" type="category" width={140} tick={{ fontSize: 12, fill: 'currentColor' }} className="text-secondary" />
+                                <YAxis dataKey="name" type="category" width={140} tick={{ fontSize: 12, fill: 'currentColor' }} className="u-text-secondary" />
                                 <Tooltip
                                     cursor={{ fill: 'currentColor', opacity: 0.1 }}
                                     contentStyle={{

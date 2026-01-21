@@ -25,16 +25,16 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
     className = ''
 }) => {
     return (
-        <div className={`empty-state-container ${className}`}>
-            <div className="empty-state-content">
-                <div className="empty-state-icon">
+        <div className={`empty-state ${className}`}>
+            <div className="empty-state__content">
+                <div className="empty-state__icon">
                     {icon}
                 </div>
-                <h2 className="empty-state-title">{title}</h2>
-                <p className="empty-state-description">{description}</p>
+                <h2 className="empty-state__title">{title}</h2>
+                <p className="empty-state__description">{description}</p>
 
                 {(primaryAction || secondaryAction) && (
-                    <div className="empty-state-actions">
+                    <div className="empty-state__actions">
                         {primaryAction && (
                             <button
                                 onClick={primaryAction.onClick}

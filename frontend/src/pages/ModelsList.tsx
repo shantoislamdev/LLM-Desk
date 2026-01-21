@@ -38,7 +38,7 @@ export const ModelsList: React.FC<ModelsListProps> = ({
     // Empty state - no providers at all
     if (providers.length === 0) {
         return (
-            <div className="animate-fade-in pb-mobile">
+            <div className="animate-fade-in u-pb-mobile">
                 <div className="page-header">
                     <div>
                         <h1 className="page-title">All Models</h1>
@@ -65,7 +65,7 @@ export const ModelsList: React.FC<ModelsListProps> = ({
     }
 
     return (
-        <div className="animate-fade-in pb-mobile">
+        <div className="animate-fade-in u-pb-mobile">
             <div className="page-header">
                 <div>
                     <h1 className="page-title">All Models</h1>
@@ -83,7 +83,7 @@ export const ModelsList: React.FC<ModelsListProps> = ({
                 </div>
             </div>
 
-            <div className="grid-models">
+            <div className="grid--models">
                 {filtered.map((model) => (
                     <Card key={`${model.providerId}-${model.id}`} className="model-card">
                         <div className="model-card__header">

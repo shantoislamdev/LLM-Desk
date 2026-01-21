@@ -67,7 +67,7 @@ export const ProviderDetail: React.FC<ProviderDetailProps> = ({
     };
 
     return (
-        <div className="provider-detail animate-fade-in pb-mobile">
+        <div className="provider-detail animate-fade-in u-pb-mobile">
             <button onClick={onBack} className="provider-detail__back-btn">
                 <ChevronRight className="provider-detail__back-icon" size={16} />
                 Back to Providers

@@ -19,7 +19,7 @@ export const ProvidersList: React.FC<ProvidersListProps> = React.memo(({
     // Empty state
     if (providers.length === 0) {
         return (
-            <div className="animate-fade-in pb-mobile">
+            <div className="animate-fade-in u-pb-mobile">
                 <div className="page-header">
                     <div>
                         <h1 className="page-title">Providers</h1>
@@ -54,7 +54,7 @@ export const ProvidersList: React.FC<ProvidersListProps> = React.memo(({
     }
 
     return (
-        <div className="animate-fade-in pb-mobile">
+        <div className="animate-fade-in u-pb-mobile">
             <div className="page-header">
                 <div>
                     <h1 className="page-title">Providers</h1>
@@ -69,7 +69,7 @@ export const ProvidersList: React.FC<ProvidersListProps> = React.memo(({
                 </button>
             </div>
 
-            <div className="grid-3">
+            <div className="grid--cols-3">
                 {providers.map((provider) => {
                     const hasVision = provider.models.some(m => m.modalities.includes('vision'));
 

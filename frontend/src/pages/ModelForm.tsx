@@ -168,7 +168,7 @@ export const ModelForm: React.FC<ModelFormProps> = ({
     };
 
     return (
-        <div className="form-page animate-fade-in pb-mobile">
+        <div className="form-page animate-fade-in u-pb-mobile">
             <button onClick={onBack} className="form-page__back-btn">
                 <ChevronRight className="form-page__back-icon" size={16} />
                 Back to {provider.name}

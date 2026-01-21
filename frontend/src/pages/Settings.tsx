@@ -110,7 +110,7 @@ export const Settings: React.FC<SettingsProps> = React.memo(({
     };
 
     return (
-        <div className="settings-section animate-fade-in pb-mobile">
+        <div className="settings-section animate-fade-in u-pb-mobile">
             <div className="page-header">
                 <div>
                     <h1 className="page-title">Settings</h1>
@@ -148,9 +148,9 @@ export const Settings: React.FC<SettingsProps> = React.memo(({
                         <h4 className="setting-row__label">Compact Mode</h4>
                         <p className="setting-row__description">Increase information density.</p>
                     </div>
-                    <div className="toggle-switch">
-                        <div className="toggle-switch__knob"></div>
-                    </div>
+                    <button type="button" className="toggle toggle--disabled">
+                        <span className="toggle__knob"></span>
+                    </button>
                 </div>
             </Card>
 
@@ -268,12 +268,13 @@ export const Settings: React.FC<SettingsProps> = React.memo(({
                         <h4 className="setting-row__label">Crash Reporting</h4>
                         <p className="setting-row__description">Help improve LLM Desk by sending anonymous crash logs.</p>
                     </div>
-                    <div
-                        className={`toggle-switch ${crashReporting ? 'toggle-switch--active' : ''}`}
+                    <button
+                        type="button"
+                        className={`toggle ${crashReporting ? 'toggle--active' : ''}`}
                         onClick={toggleCrashReporting}
                     >
-                        <div className="toggle-switch__knob"></div>
-                    </div>
+                        <span className="toggle__knob"></span>
+                    </button>
                 </div>
 
                 <div className="setting-row setting-row--divider">
@@ -296,7 +297,7 @@ export const Settings: React.FC<SettingsProps> = React.memo(({
                     <div className="setting-row__info">
                         <h4 className="setting-row__label">Check for Updates</h4>
                         <p className="setting-row__description">
-                            Current Version: <span className="text-secondary">v0.0.1</span>
+                            Current Version: <span className="u-text-secondary">v0.0.1</span>
                         </p>
                     </div>
                     <button
@@ -328,7 +329,7 @@ export const Settings: React.FC<SettingsProps> = React.memo(({
                             </>
                         ) : (
                             <>
-                                <CheckCircle size={18} className="text-secondary" />
+                                <CheckCircle size={18} className="u-text-secondary" />
                                 <p className="update-status__message">You are running the latest version.</p>
                             </>
                         )}
