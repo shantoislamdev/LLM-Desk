@@ -11,8 +11,8 @@
   --color-border-light: #F5F5F4;
   
   --color-text-primary: #1F1F1F;
-  --color-text-secondary: #5E5E5E;
-  --color-text-muted: #a8a29e;
+  --color-text-secondary: #4A4A4A;
+  --color-text-muted: #787878;
   --color-text-inverse: #FAFAF9;
   
   --color-accent: #D9795F;
@@ -69,6 +69,14 @@
   --transition-fast: 0.2s ease;
   --transition-base: 0.3s ease;
   --transition-slow: 0.5s ease-out;
+
+  /* Minisnackbar theming */
+  --mini-snackbar-bg: var(--color-surface-alt);
+  --mini-snackbar-text: var(--color-text-primary);
+  --mini-snackbar-btn-text: var(--color-accent);
+  --mini-snackbar-radius: var(--radius-xl);
+  --mini-snackbar-shadow: var(--shadow-lg);
+  --mini-snackbar-font-family: var(--font-sans);
 }
 
 /* Dark Mode Colors */
@@ -92,4 +100,8 @@
   
   --shadow-sm: none;
   --shadow-md: none;
+  
+  /* Minisnackbar Dark Override */
+  --mini-snackbar-bg: var(--color-surface-alt);
+  --mini-snackbar-text: var(--color-text-primary);
 }

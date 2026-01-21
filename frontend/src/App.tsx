@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Snackbar } from 'minisnackbar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sidebar, MobileNav } from '@/components/layout';
 import { Dashboard, ModelsList, ProvidersList, ProviderDetail, Settings, ProviderForm, ModelForm } from '@/pages';
@@ -60,19 +61,12 @@ const App: React.FC = () => {
         try {
             const success = await exportData();
             if (success) {
-                setAlertDialog({
-                    isOpen: true,
-                    title: 'Export Successful',
-                    message: 'Data exported successfully!',
-                    isError: false
-                });
+                Snackbar.add('Data exported successfully');
             }
         } catch (e) {
-            setAlertDialog({
-                isOpen: true,
-                title: 'Export Failed',
-                message: 'Failed to export data.',
-                isError: true
+            Snackbar.add('Failed to export data', {
+                text: 'RETRY',
+                handler: handleExportData
             });
         }
     };

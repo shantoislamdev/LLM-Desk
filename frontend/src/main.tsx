@@ -1,7 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { ToastProvider } from '@/contexts';
+import { Snackbar } from 'minisnackbar';
+import '@/styles/index.css';
+
+// Initialize snackbar
+Snackbar.init({ transitionDuration: 250 });
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -11,8 +15,6 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
     <React.StrictMode>
-        <ToastProvider>
-            <App />
-        </ToastProvider>
+        <App />
     </React.StrictMode>
 );

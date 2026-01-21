@@ -20,8 +20,10 @@
 .page-title {
   font-family: var(--font-serif);
   font-size: var(--text-3xl);
+  font-weight: 600;
   color: var(--color-text-primary);
   margin-bottom: var(--space-2);
+  letter-spacing: -0.02em;
 }
 
 @media (min-width: 768px) {
@@ -29,6 +31,8 @@
 }
 
 .page-subtitle {
+  font-size: var(--text-base);
   color: var(--color-text-secondary);
-  font-family: var(--font-sans);
+  max-width: 60ch;
+  line-height: 1.6;
 }

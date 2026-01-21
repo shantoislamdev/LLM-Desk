@@ -12,11 +12,28 @@
 }
 
 @media (min-width: 768px) {
-  .sidebar { display: flex; }
+  .sidebar { 
+    display: flex;
+    width: 5rem;
+    overflow: hidden; 
+    z-index: 50;
+  }
+  
+  /* Expand on hover for tablet users */
+  .sidebar:hover {
+    width: 16rem;
+    box-shadow: var(--shadow-lg);
+  }
 }
 
 @media (min-width: 1024px) {
-  .sidebar { width: 16rem; }
+  .sidebar { 
+    width: 16rem; 
+  }
+  
+  .sidebar:hover {
+    box-shadow: none;
+  }
 }
 
 .sidebar__nav {
@@ -82,4 +99,17 @@
   background-color: var(--color-surface);
   color: var(--color-accent);
   box-shadow: var(--shadow-sm);
+  position: relative;
+}
+
+.sidebar__link--active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 60%;
+  width: 3px;
+  background-color: var(--color-accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }

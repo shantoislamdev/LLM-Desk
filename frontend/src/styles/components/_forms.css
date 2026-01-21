@@ -403,6 +403,17 @@ select.input:focus {
   color: var(--color-accent);
 }
 
+.input:focus {
+  border-color: var(--color-accent);
+  outline: none;
+}
+
+.input:focus-visible {
+  border-color: var(--color-accent);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
 .modality-btn--active {
   background-color: var(--color-accent-bg);
   border-color: var(--color-accent);

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
+import { Snackbar } from 'minisnackbar';
 import { Sun, Moon, Download, Upload, AlertCircle, CheckCircle, RefreshCw } from 'lucide-react';
 import { Card } from '@/components/ui';
 import { ImportMode, ImportResult } from '@/utils/dataImport';
@@ -14,7 +15,6 @@ interface SettingsProps {
     onCheckForUpdates: () => Promise<any>;
 }
 
-type ImportStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export const Settings: React.FC<SettingsProps> = React.memo(({
     theme,
@@ -27,8 +27,7 @@ export const Settings: React.FC<SettingsProps> = React.memo(({
     onCheckForUpdates
 }) => {
     const [importMode, setImportMode] = useState<ImportMode>('merge');
-    const [importStatus, setImportStatus] = useState<ImportStatus>('idle');
-    const [importMessage, setImportMessage] = useState<string>('');
+
     const [importWarnings, setImportWarnings] = useState<string[]>([]);
     const [isDragging, setIsDragging] = useState(false);
     const [isCheckingUpdates, setIsCheckingUpdates] = useState(false);
@@ -37,29 +36,27 @@ export const Settings: React.FC<SettingsProps> = React.memo(({
 
     const handleFileSelect = useCallback(async (file: File) => {
         if (!file.name.endsWith('.json')) {
-            setImportStatus('error');
-            setImportMessage('Please select a JSON file');
+            Snackbar.add('Please select a JSON file');
             return;
         }
 
-        setImportStatus('loading');
-        setImportMessage('Importing...');
+        Snackbar.add('Importing...');
         setImportWarnings([]);
 
         try {
             const result = await onImportData(file, importMode);
 
             if (result.success) {
-                setImportStatus('success');
-                setImportMessage(result.message);
+                Snackbar.add(result.message, {
+                    text: 'VIEW',
+                    handler: () => { /* Logic to navigate to providers if needed, or just let user explore */ }
+                });
             } else {
-                setImportStatus('error');
-                setImportMessage(result.message);
+                Snackbar.add(result.message);
             }
             setImportWarnings(result.warnings);
         } catch (e) {
-            setImportStatus('error');
-            setImportMessage(e instanceof Error ? e.message : 'Import failed');
+            Snackbar.add(e instanceof Error ? e.message : 'Import failed');
         }
     }, [onImportData, importMode]);
 
@@ -216,35 +213,19 @@ export const Settings: React.FC<SettingsProps> = React.memo(({
                     />
 
                     <div
-                        className={`file-drop-zone ${isDragging ? 'file-drop-zone--active' : ''} ${importStatus === 'loading' ? 'file-drop-zone--loading' : ''}`}
+                        className={`file-drop-zone ${isDragging ? 'file-drop-zone--active' : ''}`}
                         onClick={triggerFileInput}
                         onDrop={handleDrop}
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
                     >
-                        {importStatus === 'loading' ? (
-                            <RefreshCw size={24} className="file-drop-zone__icon file-drop-zone__icon--spin" />
-                        ) : (
-                            <Upload size={24} className="file-drop-zone__icon" />
-                        )}
+                        <Upload size={24} className="file-drop-zone__icon" />
                         <span className="file-drop-zone__text">
-                            {importStatus === 'loading'
-                                ? 'Importing...'
-                                : 'Click or drop a JSON file here'}
+                            Click or drop a JSON file here
                         </span>
                     </div>
 
-                    {/* Import Status Feedback */}
-                    {importStatus !== 'idle' && importStatus !== 'loading' && (
-                        <div className={`import-status import-status--${importStatus}`}>
-                            {importStatus === 'success' ? (
-                                <CheckCircle size={18} />
-                            ) : (
-                                <AlertCircle size={18} />
-                            )}
-                            <span>{importMessage}</span>
-                        </div>
-                    )}
+
 
                     {/* Warnings */}
                     {importWarnings.length > 0 && (

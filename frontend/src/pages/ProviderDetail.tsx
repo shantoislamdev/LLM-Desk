@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Snackbar } from 'minisnackbar';
 import {
     Key,
     ChevronRight,
@@ -56,8 +57,10 @@ export const ProviderDetail: React.FC<ProviderDetailProps> = ({
         onUpdateKeys(provider.id, updatedKeys);
     };
 
+
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
+        Snackbar.add('Copied to clipboard');
     };
 
     const handleDeleteProvider = () => {
