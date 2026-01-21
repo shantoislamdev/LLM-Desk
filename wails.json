@@ -7,14 +7,14 @@
   "frontend:dev:watcher": "npm run dev",
   "frontend:dev:serverUrl": "auto",
   "author": {
-    "name": "LLM Desk",
-    "email": "contact@llmdesk.app"
+    "name": "Shanto Islam",
+    "email": "shantoislamdev@gmail.com"
   },
   "info": {
-    "companyName": "LLM Desk",
+    "companyName": "Shanto Islam",
     "productName": "LLM Desk",
     "productVersion": "1.0.0",
-    "copyright": "Copyright © 2026 LLM Desk",
-    "comments": "LLM Provider Management Desktop Application"
+    "copyright": "Copyright © 2026 LLM Desk Contributors - Licensed under GPL-3.0",
+    "comments": "A cross-platform desktop app for locally managing your LLM providers, Models and API Keys"
   }
 }
