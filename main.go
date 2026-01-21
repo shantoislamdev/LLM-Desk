@@ -4,6 +4,8 @@ import (
 	"context"
 	"embed"
 
+	"llm-desk/internal/logger"
+
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
@@ -18,6 +20,12 @@ func main() {
 	// Create an instance of the app structure
 	app := NewApp()
 
+	// Check for initialization errors
+	if app.HasInitError() {
+		logger.Error("Application initialization failed", "error", app.GetInitError())
+		// Continue anyway - the app will show the error state in the UI
+	}
+
 	// Create application with options
 	err := wails.Run(&options.App{
 		Title:     "LLM Desk",
@@ -30,9 +38,7 @@ func main() {
 		},
 		BackgroundColour: &options.RGBA{R: 15, G: 15, B: 20, A: 1},
 		OnStartup:        app.startup,
-		OnShutdown: func(ctx context.Context) {
-			// Cleanup on shutdown if needed
-		},
+		OnShutdown:       app.shutdown,
 		OnBeforeClose: func(ctx context.Context) (prevent bool) {
 			// Return true to prevent closing, false to allow
 			return false
@@ -66,6 +72,6 @@ func main() {
 	})
 
 	if err != nil {
-		println("Error:", err.Error())
+		logger.Error("Application runtime error", "error", err)
 	}
 }
