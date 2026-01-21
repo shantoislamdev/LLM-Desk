@@ -19,7 +19,8 @@ import {
     CartesianGrid,
     Tooltip,
     ResponsiveContainer,
-    Cell
+    Cell,
+    LabelList
 } from 'recharts';
 import { Card } from '@/components/ui';
 import { Provider } from '@/types';
@@ -54,20 +55,57 @@ export const Dashboard: React.FC<DashboardProps> = React.memo(({
     }, [providers]);
 
     const costData = useMemo(() => {
-        const allModels: { name: string, cost: number, provider: string }[] = [];
+        const allModels: { name: string, inputCost: number, outputCost: number, cachedCost?: number | null, provider: string }[] = [];
         providers.forEach(p => {
             p.models.forEach(m => {
-                if (m.pricing.output > 0) {
+                if (m.pricing.output > 0 || m.pricing.input > 0) {
                     allModels.push({
                         name: m.name,
-                        cost: m.pricing.output,
+                        inputCost: m.pricing.input,
+                        outputCost: m.pricing.output,
+                        cachedCost: m.pricing.cached,
                         provider: p.name
                     });
                 }
             });
         });
-        return allModels.sort((a, b) => b.cost - a.cost).slice(0, 8);
+        return allModels.sort((a, b) => b.outputCost - a.outputCost).slice(0, 8);
     }, [providers]);
+
+    // Custom Tooltip Component
+    const CustomTooltip = ({ active, payload, label }: any) => {
+        if (active && payload && payload.length) {
+            const data = payload[0].payload;
+            return (
+                <div style={{
+                    backgroundColor: 'var(--color-surface)',
+                    border: '1px solid var(--color-border)',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                }}>
+                    <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-text-primary)' }}>{label}</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
+                            <span style={{ color: 'var(--color-text-secondary)' }}>Input/M:</span>
+                            <span style={{ fontWeight: 500, color: 'var(--color-text-primary)' }}>${data.inputCost}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
+                            <span style={{ color: 'var(--color-text-secondary)' }}>Output/M:</span>
+                            <span style={{ fontWeight: 500, color: 'var(--color-text-primary)' }}>${data.outputCost}</span>
+                        </div>
+                        {data.cachedCost !== undefined && data.cachedCost !== null && (
+                            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
+                                <span style={{ color: 'var(--color-text-secondary)' }}>Cache/M:</span>
+                                <span style={{ fontWeight: 500, color: 'var(--color-text-primary)' }}>${data.cachedCost}</span>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+        return null;
+    };
 
     // Empty state - Welcome screen
     if (providers.length === 0) {
@@ -166,18 +204,9 @@ export const Dashboard: React.FC<DashboardProps> = React.memo(({
                                 <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="currentColor" className="u-text-muted" opacity={0.5} />
                                 <XAxis type="number" hide />
                                 <YAxis dataKey="name" type="category" width={140} tick={{ fontSize: 12, fill: 'currentColor' }} className="u-text-secondary" />
-                                <Tooltip
-                                    cursor={{ fill: 'currentColor', opacity: 0.1 }}
-                                    contentStyle={{
-                                        borderRadius: '12px',
-                                        border: 'none',
-                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                                        backgroundColor: 'var(--color-surface)',
-                                        color: 'var(--color-text-primary)'
-                                    }}
-                                    itemStyle={{ color: 'inherit' }}
-                                />
-                                <Bar dataKey="cost" radius={[0, 4, 4, 0]} barSize={24}>
+                                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'currentColor', opacity: 0.1 }} />
+                                <Bar dataKey="outputCost" radius={[0, 4, 4, 0]} barSize={24}>
+                                    <LabelList dataKey="outputCost" position="right" formatter={(val: number) => `$${val}`} style={{ fill: 'var(--color-text-primary)', fontSize: '12px', fontWeight: 500 }} />
                                     {costData.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={index < 3 ? '#D9795F' : '#a8a29e'} />
                                     ))}
