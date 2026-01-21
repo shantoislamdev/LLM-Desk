@@ -1,0 +1,40 @@
+/* ========================================
+   App Container & Main Content
+   ======================================== */
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.main-content__scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .main-content__scroll { padding: var(--space-8); }
+}
+
+@media (min-width: 1024px) {
+  .main-content__scroll { padding: var(--space-12); }
+}
+
+.main-content__container {
+  max-width: 72rem;
+  margin: 0 auto;
+  width: 100%;
+}

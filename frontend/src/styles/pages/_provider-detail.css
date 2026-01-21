@@ -1,0 +1,185 @@
+/* ========================================
+   Provider Detail
+   ======================================== */
+.provider-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.provider-detail__back-btn {
+  display: flex;
+  align-items: center;
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.provider-detail__back-btn:hover {
+  color: var(--color-text-primary);
+}
+
+.provider-detail__back-icon {
+  transform: rotate(180deg);
+  margin-right: var(--space-1);
+}
+
+.provider-detail__container {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-3xl);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.provider-detail__header {
+  padding: var(--space-6);
+  background-color: var(--color-surface-alt);
+  border-bottom: 1px solid var(--color-border);
+}
+
+@media (min-width: 768px) {
+  .provider-detail__header { padding: var(--space-8); }
+}
+
+.provider-detail__header-top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .provider-detail__header-top {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.provider-detail__info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.provider-detail__avatar {
+  width: 4rem;
+  height: 4rem;
+  border-radius: var(--radius-2xl);
+  background-color: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: var(--text-3xl);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.provider-detail__name {
+  font-family: var(--font-serif);
+  font-size: var(--text-2xl);
+  color: var(--color-text-primary);
+}
+
+@media (min-width: 768px) {
+  .provider-detail__name { font-size: var(--text-3xl); }
+}
+
+.provider-detail__name-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.provider-detail__badge {
+  font-size: var(--text-xs);
+  padding: var(--space-1) var(--space-2);
+  background-color: var(--color-accent-bg);
+  color: var(--color-accent);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.provider-detail__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--text-base);
+  margin-top: var(--space-1);
+}
+
+.provider-detail__id {
+  font-family: var(--font-mono);
+  background-color: var(--color-surface-alt);
+  padding: 0.125rem var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+}
+
+.provider-detail__actions {
+  display: flex;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .provider-detail__actions { width: auto; }
+}
+
+/* URL Display */
+.url-display {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+@media (min-width: 640px) {
+  .url-display { flex-direction: row; }
+}
+
+.url-display__item {
+  flex: 1;
+  padding: var(--space-3);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+}
+
+.url-display__content {
+  min-width: 0;
+  padding-right: var(--space-4);
+}
+
+.url-display__label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  display: block;
+  margin-bottom: 0.125rem;
+}
+
+.url-display__value {
+  font-size: var(--text-base);
+  font-family: var(--font-mono);
+  color: var(--color-text-secondary);
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

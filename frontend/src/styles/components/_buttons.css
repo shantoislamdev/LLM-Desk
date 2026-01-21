@@ -1,0 +1,81 @@
+/* ========================================
+   Buttons
+   ======================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-base);
+  font-weight: 500;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn--primary {
+  background-color: var(--color-text-primary);
+  color: var(--color-text-inverse);
+}
+
+.btn--primary:hover {
+  opacity: 0.9;
+}
+
+.btn--secondary {
+  background-color: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.btn--secondary:hover {
+  background-color: var(--color-surface-alt);
+}
+
+.btn--danger {
+  background: transparent;
+  border-color: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+.btn--danger:hover {
+  background-color: var(--color-danger-bg);
+}
+
+.btn--icon {
+  padding: var(--space-2);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-muted);
+}
+
+.btn--icon:hover {
+  color: var(--color-text-secondary);
+  background-color: var(--color-surface-alt);
+}
+
+.btn--icon-danger:hover {
+  color: var(--color-danger);
+  background-color: var(--color-danger-bg);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--flex {
+  flex: 1;
+}
+
+@media (min-width: 768px) {
+  .btn--flex { flex: none; }
+}
+
+.btn--sm {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+}

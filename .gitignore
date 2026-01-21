@@ -1,0 +1,27 @@
+# Build outputs
+build/bin/
+*.exe
+
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Frontend build
+frontend/dist/
+
+# Go
+*.test
+*.out
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+
+# Local development
+*.local

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "LLM Desk",
+  "outputfilename": "llm-desk",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "LLM Desk",
+    "email": "contact@llmdesk.app"
+  },
+  "info": {
+    "companyName": "LLM Desk",
+    "productName": "LLM Desk",
+    "productVersion": "1.0.0",
+    "copyright": "Copyright © 2026 LLM Desk",
+    "comments": "LLM Provider Management Desktop Application"
+  }
+}
