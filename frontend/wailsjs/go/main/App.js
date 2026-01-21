@@ -6,6 +6,10 @@ export function AddModel(arg1, arg2) {
   return window['go']['main']['App']['AddModel'](arg1, arg2);
 }
 
+export function CheckForUpdates() {
+  return window['go']['main']['App']['CheckForUpdates']();
+}
+
 export function ClearAllData() {
   return window['go']['main']['App']['ClearAllData']();
 }
@@ -34,8 +38,20 @@ export function GetAllProviders() {
   return window['go']['main']['App']['GetAllProviders']();
 }
 
+export function GetCrashReporting() {
+  return window['go']['main']['App']['GetCrashReporting']();
+}
+
 export function GetDataDir() {
   return window['go']['main']['App']['GetDataDir']();
+}
+
+export function GetInitError() {
+  return window['go']['main']['App']['GetInitError']();
+}
+
+export function GetLogDir() {
+  return window['go']['main']['App']['GetLogDir']();
 }
 
 export function GetProvider(arg1) {
@@ -46,12 +62,24 @@ export function GetTheme() {
   return window['go']['main']['App']['GetTheme']();
 }
 
+export function GetVersion() {
+  return window['go']['main']['App']['GetVersion']();
+}
+
+export function HasInitError() {
+  return window['go']['main']['App']['HasInitError']();
+}
+
 export function ImportData(arg1) {
   return window['go']['main']['App']['ImportData'](arg1);
 }
 
 export function SaveProviders(arg1) {
   return window['go']['main']['App']['SaveProviders'](arg1);
+}
+
+export function SetCrashReporting(arg1) {
+  return window['go']['main']['App']['SetCrashReporting'](arg1);
 }
 
 export function SetTheme(arg1) {

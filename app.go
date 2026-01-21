@@ -7,6 +7,7 @@ import (
 	"llm-desk/internal/models"
 	"llm-desk/internal/services"
 	"llm-desk/internal/storage"
+	"llm-desk/internal/updater"
 	"llm-desk/internal/version"
 )
 
@@ -24,6 +25,7 @@ type App struct {
 // NewApp creates a new App application struct
 // Returns App even on error - check initError for initialization failures
 func NewApp() *App {
+	defer logger.Recovery()
 	app := &App{}
 
 	// Initialize logger first
@@ -92,6 +94,11 @@ func (a *App) GetVersion() string {
 	return version.GetVersion()
 }
 
+// CheckForUpdates checks for a new version on GitHub
+func (a *App) CheckForUpdates() (*updater.UpdateInfo, error) {
+	return updater.CheckForUpdates()
+}
+
 // shutdown is called when the app is closing
 func (a *App) shutdown(ctx context.Context) {
 	logger.Info("Application shutting down")
@@ -119,6 +126,22 @@ func (a *App) SetTheme(theme string) error {
 	}
 	logger.Debug("Setting theme", "theme", theme)
 	return a.settingsService.SetTheme(theme)
+}
+
+// GetCrashReporting returns if crash reporting is enabled
+func (a *App) GetCrashReporting() bool {
+	if a.settingsService == nil {
+		return true
+	}
+	return a.settingsService.GetCrashReporting()
+}
+
+// SetCrashReporting sets the crash reporting preference
+func (a *App) SetCrashReporting(enabled bool) error {
+	if a.settingsService == nil {
+		return a.initError
+	}
+	return a.settingsService.SetCrashReporting(enabled)
 }
 
 // ============================================

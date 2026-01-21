@@ -212,7 +212,8 @@ func (s *Storage) Clear() error {
 
 // AppSettings represents user preferences (defined here to avoid import cycle)
 type AppSettings struct {
-	Theme string `json:"theme"`
+	Theme                string `json:"theme"`
+	EnableCrashReporting bool   `json:"enableCrashReporting"`
 }
 
 // settingsFilename returns the path to the settings file

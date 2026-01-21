@@ -3,7 +3,7 @@ package version
 var (
 	// Version is the current version of the application.
 	// This is injected at build time using ldflags.
-	Version = "v1.0.0-dev"
+	Version = "v0.0.1-dev"
 
 	// Commit is the git commit hash at the time of build.
 	// This is injected at build time using ldflags.

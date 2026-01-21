@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sidebar, MobileNav } from '@/components/layout';
 import { Dashboard, ModelsList, ProvidersList, ProviderDetail, Settings, ProviderForm, ModelForm } from '@/pages';
-import { useTheme, useProviders } from '@/hooks';
+import { useSettings, useProviders } from '@/hooks';
 import { ViewState, Provider, Model } from '@/types';
 import '@/styles/index.css';
 
@@ -10,7 +10,13 @@ import { ConfirmationDialog } from '@/components/ui';
 
 const App: React.FC = () => {
     const [view, setView] = useState<ViewState>('dashboard');
-    const { theme, toggleTheme } = useTheme();
+    const {
+        theme,
+        toggleTheme,
+        crashReporting,
+        toggleCrashReporting,
+        checkForUpdates
+    } = useSettings();
     const {
         providers,
         selectedProvider,
@@ -238,6 +244,9 @@ const App: React.FC = () => {
                                         onClearData={handleClearDataClick}
                                         onExportData={handleExportData}
                                         onImportData={importDataFromFile}
+                                        crashReporting={crashReporting}
+                                        toggleCrashReporting={toggleCrashReporting}
+                                        onCheckForUpdates={checkForUpdates}
                                     />
                                 )}
                             </motion.div>

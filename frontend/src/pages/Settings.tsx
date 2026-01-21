@@ -9,6 +9,9 @@ interface SettingsProps {
     onClearData: () => void;
     onExportData: () => void;
     onImportData: (file: File, mode: ImportMode) => Promise<ImportResult>;
+    crashReporting: boolean;
+    toggleCrashReporting: () => void;
+    onCheckForUpdates: () => Promise<any>;
 }
 
 type ImportStatus = 'idle' | 'loading' | 'success' | 'error';
@@ -18,13 +21,18 @@ export const Settings: React.FC<SettingsProps> = ({
     toggleTheme,
     onClearData,
     onExportData,
-    onImportData
+    onImportData,
+    crashReporting,
+    toggleCrashReporting,
+    onCheckForUpdates
 }) => {
     const [importMode, setImportMode] = useState<ImportMode>('merge');
     const [importStatus, setImportStatus] = useState<ImportStatus>('idle');
     const [importMessage, setImportMessage] = useState<string>('');
     const [importWarnings, setImportWarnings] = useState<string[]>([]);
     const [isDragging, setIsDragging] = useState(false);
+    const [isCheckingUpdates, setIsCheckingUpdates] = useState(false);
+    const [updateResult, setUpdateResult] = useState<any>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileSelect = useCallback(async (file: File) => {
@@ -86,6 +94,19 @@ export const Settings: React.FC<SettingsProps> = ({
 
     const triggerFileInput = () => {
         fileInputRef.current?.click();
+    };
+
+    const handleCheckUpdates = async () => {
+        setIsCheckingUpdates(true);
+        setUpdateResult(null);
+        try {
+            const result = await onCheckForUpdates();
+            setUpdateResult(result);
+        } catch (e) {
+            setUpdateResult({ error: 'Failed to check for updates' });
+        } finally {
+            setIsCheckingUpdates(false);
+        }
     };
 
     return (
@@ -241,7 +262,21 @@ export const Settings: React.FC<SettingsProps> = ({
 
             <Card className="settings-panel">
                 <h3 className="settings-panel__title">Data & Privacy</h3>
+
                 <div className="setting-row">
+                    <div className="setting-row__info">
+                        <h4 className="setting-row__label">Crash Reporting</h4>
+                        <p className="setting-row__description">Help improve LLM Desk by sending anonymous crash logs.</p>
+                    </div>
+                    <div
+                        className={`toggle-switch ${crashReporting ? 'toggle-switch--active' : ''}`}
+                        onClick={toggleCrashReporting}
+                    >
+                        <div className="toggle-switch__knob"></div>
+                    </div>
+                </div>
+
+                <div className="setting-row setting-row--divider">
                     <div className="setting-row__info">
                         <h4 className="setting-row__label">Local Storage</h4>
                         <p className="setting-row__description">Clear all locally stored API keys.</p>
@@ -254,6 +289,53 @@ export const Settings: React.FC<SettingsProps> = ({
                     </button>
                 </div>
             </Card>
+
+            <Card className="settings-panel">
+                <h3 className="settings-panel__title">Updates</h3>
+                <div className="setting-row">
+                    <div className="setting-row__info">
+                        <h4 className="setting-row__label">Check for Updates</h4>
+                        <p className="setting-row__description">
+                            Current Version: <span className="text-secondary">v1.0.0</span>
+                        </p>
+                    </div>
+                    <button
+                        onClick={handleCheckUpdates}
+                        className="btn btn--secondary"
+                        disabled={isCheckingUpdates}
+                    >
+                        {isCheckingUpdates ? <RefreshCw size={16} className="animate-spin mr-2" /> : null}
+                        {isCheckingUpdates ? 'Checking...' : 'Check for Updates'}
+                    </button>
+                </div>
+
+                {updateResult && (
+                    <div className={`update-status ${updateResult.available ? 'update-status--available' : 'update-status--latest'}`}>
+                        {updateResult.available ? (
+                            <>
+                                <CheckCircle size={18} className="text-success" />
+                                <div className="update-status__info">
+                                    <p className="update-status__message">Version {updateResult.version} is available!</p>
+                                    <a
+                                        href={updateResult.downloadUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="update-status__link"
+                                    >
+                                        Download Now
+                                    </a>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <CheckCircle size={18} className="text-secondary" />
+                                <p className="update-status__message">You are running the latest version.</p>
+                            </>
+                        )}
+                    </div>
+                )}
+            </Card>
+
         </div>
     );
 };

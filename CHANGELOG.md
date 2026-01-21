@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed app crash issues related to storage initialization failures.
 - Fixed flaky unit tests in provider service ID generation.
 
-## [1.0.0] - 2026-01-21
+## [0.0.1] - 2026-01-21
 
 ### Added
 - **Initial Release**: First stable release of LLM Desk.

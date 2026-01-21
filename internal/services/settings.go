@@ -14,7 +14,7 @@ type SettingsService struct {
 func NewSettingsService(s *storage.Storage) *SettingsService {
 	svc := &SettingsService{
 		storage:  s,
-		settings: storage.AppSettings{Theme: "dark"}, // Default
+		settings: storage.AppSettings{Theme: "dark", EnableCrashReporting: true}, // Default
 	}
 
 	// Load settings on initialization
@@ -47,4 +47,15 @@ func (s *SettingsService) SetTheme(theme string) error {
 // GetSettings returns all settings
 func (s *SettingsService) GetSettings() storage.AppSettings {
 	return s.settings
+}
+
+// GetCrashReporting returns if crash reporting is enabled
+func (s *SettingsService) GetCrashReporting() bool {
+	return s.settings.EnableCrashReporting
+}
+
+// SetCrashReporting sets the crash reporting preference
+func (s *SettingsService) SetCrashReporting(enabled bool) error {
+	s.settings.EnableCrashReporting = enabled
+	return s.storage.SaveSettings(&s.settings)
 }
