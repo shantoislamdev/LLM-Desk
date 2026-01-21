@@ -271,7 +271,6 @@ export function useProviders() {
 
     // Import data from file (uses native file dialog)
     const importDataFromFile = useCallback(async (
-        _file: File, // Not used in Wails - native dialog handles file selection
         mode: ImportMode
     ): Promise<ImportResult> => {
         try {

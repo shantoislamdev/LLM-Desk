@@ -9,7 +9,7 @@ interface SettingsProps {
     toggleTheme: () => void;
     onClearData: () => void;
     onExportData: () => void;
-    onImportData: (file: File, mode: ImportMode) => Promise<ImportResult>;
+    onImportData: (mode: ImportMode) => Promise<ImportResult>;
     crashReporting: boolean;
     toggleCrashReporting: () => void;
     onCheckForUpdates: () => Promise<any>;
@@ -27,70 +27,29 @@ export const Settings: React.FC<SettingsProps> = React.memo(({
     onCheckForUpdates
 }) => {
     const [importMode, setImportMode] = useState<ImportMode>('merge');
-
     const [importWarnings, setImportWarnings] = useState<string[]>([]);
-    const [isDragging, setIsDragging] = useState(false);
     const [isCheckingUpdates, setIsCheckingUpdates] = useState(false);
     const [updateResult, setUpdateResult] = useState<any>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const handleFileSelect = useCallback(async (file: File) => {
-        if (!file.name.endsWith('.json')) {
-            Snackbar.add('Please select a JSON file');
-            return;
-        }
-
+    const handleImportClick = async () => {
         Snackbar.add('Importing...');
         setImportWarnings([]);
 
         try {
-            const result = await onImportData(file, importMode);
+            const result = await onImportData(importMode);
 
             if (result.success) {
                 Snackbar.add(result.message, {
                     text: 'VIEW',
                     handler: () => { /* Logic to navigate to providers if needed, or just let user explore */ }
                 });
-            } else {
+            } else if (result.message !== 'Import cancelled') {
                 Snackbar.add(result.message);
             }
             setImportWarnings(result.warnings);
         } catch (e) {
             Snackbar.add(e instanceof Error ? e.message : 'Import failed');
         }
-    }, [onImportData, importMode]);
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            handleFileSelect(file);
-        }
-        // Reset input so the same file can be selected again
-        e.target.value = '';
-    };
-
-    const handleDrop = useCallback((e: React.DragEvent) => {
-        e.preventDefault();
-        setIsDragging(false);
-
-        const file = e.dataTransfer.files[0];
-        if (file) {
-            handleFileSelect(file);
-        }
-    }, [handleFileSelect]);
-
-    const handleDragOver = (e: React.DragEvent) => {
-        e.preventDefault();
-        setIsDragging(true);
-    };
-
-    const handleDragLeave = (e: React.DragEvent) => {
-        e.preventDefault();
-        setIsDragging(false);
-    };
-
-    const triggerFileInput = () => {
-        fileInputRef.current?.click();
     };
 
     const handleCheckUpdates = async () => {
@@ -204,24 +163,14 @@ export const Settings: React.FC<SettingsProps> = React.memo(({
                     </p>
 
                     {/* File Drop Zone */}
-                    <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept=".json"
-                        onChange={handleInputChange}
-                        className="visually-hidden"
-                    />
-
+                    {/* Import Trigger Zone */}
                     <div
-                        className={`file-drop-zone ${isDragging ? 'file-drop-zone--active' : ''}`}
-                        onClick={triggerFileInput}
-                        onDrop={handleDrop}
-                        onDragOver={handleDragOver}
-                        onDragLeave={handleDragLeave}
+                        className="file-drop-zone"
+                        onClick={handleImportClick}
                     >
                         <Upload size={24} className="file-drop-zone__icon" />
                         <span className="file-drop-zone__text">
-                            Click or drop a JSON file here
+                            Click to select a JSON file
                         </span>
                     </div>
 
