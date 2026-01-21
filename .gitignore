@@ -25,3 +25,15 @@ frontend/dist/
 
 # Local development
 *.local
+
+# System
+Thumbs.db
+Desktop.ini
+
+# Environment
+.env
+.env.local
+.env.*
+
+# Wails
+frontend/package.json.md5
