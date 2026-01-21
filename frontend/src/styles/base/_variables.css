@@ -25,9 +25,10 @@
   --color-danger-bg: #fef2f2;
   
   /* Typography */
-  --font-sans: "JetBrains Mono", monospace;
-  --font-serif: "JetBrains Mono", monospace;
+  --font-sans: "Inter", sans-serif;
+  --font-serif: "JetBrains Mono", monospace; /* Keeping consistent or can be changed if needed, but user didn't ask for serif */
   --font-mono: "JetBrains Mono", monospace;
+  --font-display: "JetBrains Mono", monospace; /* Explicit variable for Headings */
   
   --text-xs: 0.625rem;
   --text-sm: 0.75rem;
