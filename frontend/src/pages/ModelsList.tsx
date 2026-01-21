@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Cpu, Copy, Box, Download } from 'lucide-react';
+import { Snackbar } from 'minisnackbar';
+import { Search, Cpu, Copy, Check, Box, Download } from 'lucide-react';
 import { Card, Badge, EmptyState } from '@/components/ui';
 import { Provider } from '@/types';
 
@@ -15,6 +16,19 @@ export const ModelsList: React.FC<ModelsListProps> = ({
     onNavigateToProviders
 }) => {
     const [filter, setFilter] = useState('');
+    const [copiedId, setCopiedId] = useState<string | null>(null);
+
+    const handleCopy = async (id: string) => {
+        try {
+            await navigator.clipboard.writeText(id);
+            setCopiedId(id);
+            Snackbar.add('Model ID copied to clipboard');
+            setTimeout(() => setCopiedId(null), 2000);
+        } catch (err) {
+            console.error('Failed to copy:', err);
+            Snackbar.add('Failed to copy');
+        }
+    };
 
     const allModels = useMemo(() => {
         return providers.flatMap(p =>
@@ -122,8 +136,15 @@ export const ModelsList: React.FC<ModelsListProps> = ({
 
                         <div className="model-card__footer">
                             <span className="model-card__id">{model.id}</span>
-                            <button className="model-card__copy-btn">
-                                Copy ID <Copy size={12} />
+                            <button
+                                className="model-card__copy-btn"
+                                onClick={() => handleCopy(model.id)}
+                            >
+                                {copiedId === model.id ? (
+                                    <>Copied <Check size={12} /></>
+                                ) : (
+                                    <>Copy ID <Copy size={12} /></>
+                                )}
                             </button>
                         </div>
                     </Card>

@@ -70,10 +70,10 @@
   --transition-base: 0.3s ease;
   --transition-slow: 0.5s ease-out;
 
-  /* Minisnackbar theming */
-  --mini-snackbar-bg: var(--color-surface-alt);
-  --mini-snackbar-text: var(--color-text-primary);
-  --mini-snackbar-btn-text: var(--color-accent);
+  /* Minisnackbar theming - Dark snackbar on light mode for contrast */
+  --mini-snackbar-bg: #1c1917;
+  --mini-snackbar-text: #FAFAF9;
+  --mini-snackbar-btn-text: #D9795F;
   --mini-snackbar-radius: var(--radius-xl);
   --mini-snackbar-shadow: var(--shadow-lg);
   --mini-snackbar-font-family: var(--font-sans);
@@ -101,7 +101,7 @@
   --shadow-sm: none;
   --shadow-md: none;
   
-  /* Minisnackbar Dark Override */
-  --mini-snackbar-bg: var(--color-surface-alt);
-  --mini-snackbar-text: var(--color-text-primary);
+  /* Minisnackbar Dark Override - Light snackbar on dark mode for contrast */
+  --mini-snackbar-bg: #FAFAF9;
+  --mini-snackbar-text: #1c1917;
 }
