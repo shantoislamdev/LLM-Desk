@@ -7,6 +7,8 @@ import { ImportMode, ImportResult } from '@/utils/dataImport';
 interface SettingsProps {
     theme: string;
     toggleTheme: () => void;
+    followSystem: boolean;
+    toggleFollowSystem: () => void;
     onClearData: () => void;
     onExportData: () => void;
     onImportData: (mode: ImportMode) => Promise<ImportResult>;
@@ -19,6 +21,8 @@ interface SettingsProps {
 export const Settings: React.FC<SettingsProps> = React.memo(({
     theme,
     toggleTheme,
+    followSystem,
+    toggleFollowSystem,
     onClearData,
     onExportData,
     onImportData,
@@ -79,19 +83,35 @@ export const Settings: React.FC<SettingsProps> = React.memo(({
 
                 <div className="setting-row">
                     <div className="setting-row__info">
+                        <h4 className="setting-row__label">Follow System Theme</h4>
+                        <p className="setting-row__description">Automatically switch between light and dark mode.</p>
+                    </div>
+                    <button
+                        type="button"
+                        className={`toggle ${followSystem ? 'toggle--active' : ''}`}
+                        onClick={toggleFollowSystem}
+                    >
+                        <span className="toggle__knob"></span>
+                    </button>
+                </div>
+
+                <div className={`setting-row ${followSystem ? 'setting-row--disabled' : ''}`}>
+                    <div className="setting-row__info">
                         <h4 className="setting-row__label">Theme Preference</h4>
                         <p className="setting-row__description">Switch between light and dark mode.</p>
                     </div>
 
                     <div className="theme-toggle">
                         <button
-                            onClick={() => theme === 'dark' && toggleTheme()}
+                            onClick={() => !followSystem && theme === 'dark' && toggleTheme()}
+                            disabled={followSystem}
                             className={`theme-toggle__btn ${theme === 'light' ? 'theme-toggle__btn--active' : ''}`}
                         >
                             <Sun size={18} />
                         </button>
                         <button
-                            onClick={() => theme === 'light' && toggleTheme()}
+                            onClick={() => !followSystem && theme === 'light' && toggleTheme()}
+                            disabled={followSystem}
                             className={`theme-toggle__btn ${theme === 'dark' ? 'theme-toggle__btn--active' : ''}`}
                         >
                             <Moon size={18} />

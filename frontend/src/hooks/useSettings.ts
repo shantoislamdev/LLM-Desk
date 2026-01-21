@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-import { GetTheme, SetTheme, GetCrashReporting, SetCrashReporting, CheckForUpdates } from '../../wailsjs/go/main/App';
+import { GetTheme, SetTheme, GetFollowSystemTheme, SetFollowSystemTheme, GetCrashReporting, SetCrashReporting, CheckForUpdates } from '../../wailsjs/go/main/App';
 import { updater } from '../../wailsjs/go/models';
 
 export function useSettings() {
     const [theme, setThemeState] = useState<string>('dark');
+    const [followSystem, setFollowSystemState] = useState<boolean>(false);
     const [crashReporting, setCrashReportingState] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState(true);
     const [updateInfo, setUpdateInfo] = useState<updater.UpdateInfo | null>(null);
@@ -12,12 +13,14 @@ export function useSettings() {
     useEffect(() => {
         const loadSettings = async () => {
             try {
-                const [savedTheme, savedCrashReporting] = await Promise.all([
+                const [savedTheme, savedFollowSystem, savedCrashReporting] = await Promise.all([
                     GetTheme(),
+                    GetFollowSystemTheme(),
                     GetCrashReporting()
                 ]);
                 setThemeState(savedTheme || 'dark');
-                setCrashReportingState(savedCrashReporting !== false); // Default to true
+                setFollowSystemState(savedFollowSystem);
+                setCrashReportingState(savedCrashReporting !== false);
             } catch (e) {
                 console.error('Failed to load settings:', e);
             } finally {
@@ -26,6 +29,29 @@ export function useSettings() {
         };
         loadSettings();
     }, []);
+
+    // Handle system theme changes
+    useEffect(() => {
+        if (!followSystem) return;
+
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+        const handleChange = (e: MediaQueryListEvent | MediaQueryList) => {
+            const systemTheme = e.matches ? 'dark' : 'light';
+            if (theme !== systemTheme) {
+                setThemeState(systemTheme);
+                // We don't save this to backend as "theme" preference, 
+                // just update local state for the UI
+            }
+        };
+
+        // Initial check
+        handleChange(mediaQuery);
+
+        // Listener
+        mediaQuery.addEventListener('change', handleChange);
+        return () => mediaQuery.removeEventListener('change', handleChange);
+    }, [followSystem, theme]);
 
     // Apply theme to document when it changes
     useEffect(() => {
@@ -37,6 +63,8 @@ export function useSettings() {
     }, [theme, isLoading]);
 
     const toggleTheme = useCallback(async () => {
+        if (followSystem) return; // Disable manual toggle if following system
+
         const newTheme = theme === 'light' ? 'dark' : 'light';
         setThemeState(newTheme);
         try {
@@ -44,7 +72,27 @@ export function useSettings() {
         } catch (e) {
             console.error('Failed to save theme:', e);
         }
-    }, [theme]);
+    }, [theme, followSystem]);
+
+    const toggleFollowSystem = useCallback(async () => {
+        const newValue = !followSystem;
+        setFollowSystemState(newValue);
+
+        // If enabling, immediately apply system theme
+        if (newValue) {
+            const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const newTheme = isDark ? 'dark' : 'light';
+            setThemeState(newTheme);
+            // We might want to save the "calculated" theme or just leave the old preference?
+            // Usually treating "followSystem" as an override is best.
+        }
+
+        try {
+            await SetFollowSystemTheme(newValue);
+        } catch (e) {
+            console.error('Failed to save system theme preference:', e);
+        }
+    }, [followSystem]);
 
     const toggleCrashReporting = useCallback(async () => {
         const newValue = !crashReporting;
@@ -70,6 +118,8 @@ export function useSettings() {
     return {
         theme,
         toggleTheme,
+        followSystem,
+        toggleFollowSystem,
         crashReporting,
         toggleCrashReporting,
         isLoading,

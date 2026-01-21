@@ -25,6 +25,8 @@ export function GetCrashReporting():Promise<boolean>;
 
 export function GetDataDir():Promise<string>;
 
+export function GetFollowSystemTheme():Promise<boolean>;
+
 export function GetInitError():Promise<string>;
 
 export function GetLogDir():Promise<string>;
@@ -42,6 +44,8 @@ export function ImportData(arg1:string):Promise<models.ImportResult>;
 export function SaveProviders(arg1:Array<models.Provider>):Promise<void>;
 
 export function SetCrashReporting(arg1:boolean):Promise<void>;
+
+export function SetFollowSystemTheme(arg1:boolean):Promise<void>;
 
 export function SetTheme(arg1:string):Promise<void>;
 

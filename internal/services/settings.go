@@ -44,6 +44,17 @@ func (s *SettingsService) SetTheme(theme string) error {
 	return s.storage.SaveSettings(&s.settings)
 }
 
+// GetFollowSystemTheme returns if system theme should be followed
+func (s *SettingsService) GetFollowSystemTheme() bool {
+	return s.settings.FollowSystemTheme
+}
+
+// SetFollowSystemTheme sets the system theme preference
+func (s *SettingsService) SetFollowSystemTheme(follow bool) error {
+	s.settings.FollowSystemTheme = follow
+	return s.storage.SaveSettings(&s.settings)
+}
+
 // GetSettings returns all settings
 func (s *SettingsService) GetSettings() storage.AppSettings {
 	return s.settings

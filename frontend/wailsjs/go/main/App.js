@@ -46,6 +46,10 @@ export function GetDataDir() {
   return window['go']['main']['App']['GetDataDir']();
 }
 
+export function GetFollowSystemTheme() {
+  return window['go']['main']['App']['GetFollowSystemTheme']();
+}
+
 export function GetInitError() {
   return window['go']['main']['App']['GetInitError']();
 }
@@ -80,6 +84,10 @@ export function SaveProviders(arg1) {
 
 export function SetCrashReporting(arg1) {
   return window['go']['main']['App']['SetCrashReporting'](arg1);
+}
+
+export function SetFollowSystemTheme(arg1) {
+  return window['go']['main']['App']['SetFollowSystemTheme'](arg1);
 }
 
 export function SetTheme(arg1) {

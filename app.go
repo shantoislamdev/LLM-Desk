@@ -128,6 +128,23 @@ func (a *App) SetTheme(theme string) error {
 	return a.settingsService.SetTheme(theme)
 }
 
+// GetFollowSystemTheme returns if system theme should be followed
+func (a *App) GetFollowSystemTheme() bool {
+	if a.settingsService == nil {
+		return false
+	}
+	return a.settingsService.GetFollowSystemTheme()
+}
+
+// SetFollowSystemTheme sets the system theme preference
+func (a *App) SetFollowSystemTheme(follow bool) error {
+	if a.settingsService == nil {
+		return a.initError
+	}
+	logger.Debug("Setting follow system theme", "follow", follow)
+	return a.settingsService.SetFollowSystemTheme(follow)
+}
+
 // GetCrashReporting returns if crash reporting is enabled
 func (a *App) GetCrashReporting() bool {
 	if a.settingsService == nil {

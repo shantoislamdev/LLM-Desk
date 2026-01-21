@@ -14,6 +14,8 @@ const App: React.FC = () => {
     const {
         theme,
         toggleTheme,
+        followSystem,
+        toggleFollowSystem,
         crashReporting,
         toggleCrashReporting,
         checkForUpdates
@@ -235,6 +237,8 @@ const App: React.FC = () => {
                                     <Settings
                                         theme={theme}
                                         toggleTheme={toggleTheme}
+                                        followSystem={followSystem}
+                                        toggleFollowSystem={toggleFollowSystem}
                                         onClearData={handleClearDataClick}
                                         onExportData={handleExportData}
                                         onImportData={importDataFromFile}
