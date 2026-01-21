@@ -18,21 +18,33 @@
     overflow: hidden; 
     z-index: 50;
   }
-  
-  /* Expand on hover for tablet users */
+}
+
+/* Hover expansion for Tablet only */
+@media (min-width: 768px) and (max-width: 1023px) {
   .sidebar:hover {
     width: 16rem;
     box-shadow: var(--shadow-lg);
+  }
+  
+  .sidebar:hover .nav-item__label {
+    display: block;
+    animation: fadeIn 0.2s ease forwards;
+  }
+  
+  .sidebar:hover .nav-item {
+    justify-content: flex-start;
+  }
+  
+  .sidebar:hover .sidebar__section {
+    display: block;
+    animation: fadeIn 0.2s ease forwards;
   }
 }
 
 @media (min-width: 1024px) {
   .sidebar { 
     width: 16rem; 
-  }
-  
-  .sidebar:hover {
-    box-shadow: none;
   }
 }
 
@@ -112,4 +124,9 @@
   width: 3px;
   background-color: var(--color-accent);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
