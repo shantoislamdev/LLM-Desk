@@ -1,5 +1,5 @@
 // ============================================
-// LLM Desk Enterprise Data Types v0.0.1
+// LLM Desk Enterprise Data Types v1.0.0
 // ============================================
 
 // Pricing structure (per million tokens)
