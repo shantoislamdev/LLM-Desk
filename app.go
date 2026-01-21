@@ -7,6 +7,7 @@ import (
 	"llm-desk/internal/models"
 	"llm-desk/internal/services"
 	"llm-desk/internal/storage"
+	"llm-desk/internal/version"
 )
 
 // App struct - main application with all services
@@ -83,7 +84,12 @@ func (a *App) startup(ctx context.Context) {
 	if a.exportService != nil {
 		a.exportService.SetContext(ctx)
 	}
-	logger.Info("Application startup complete")
+	logger.Info("Application startup complete", "version", version.GetVersion())
+}
+
+// GetVersion returns the application version
+func (a *App) GetVersion() string {
+	return version.GetVersion()
 }
 
 // shutdown is called when the app is closing

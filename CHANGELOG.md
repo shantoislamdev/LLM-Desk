@@ -8,11 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **Structured Logging**: Implemented a robust logging system using Go's `slog`. Logs are rotated daily and kept for 7 days.
-- **Toast Notifications**: Added a global toast notification system in the frontend for real-time user feedback.
+- **Security Hardening**:
+  - Implemented secure API key storage using OS-native keyring (Windows Credential Manager, macOS Keychain).
+  - Added transparent migration of plaintext API keys from `providers.json` to secure storage.
+  - Implemented AES-256-GCM encryption for data backups and exports.
+- **Structured Logging**:
+  - Added Go `slog` package for structured, file-based logging.
+  - Log rotation and configurable log levels.
+- **Error Handling**:
+  - Global toast notification system for frontend errors.
+  - Graceful application startup and error recovery.
+- **Documentation**:
+  - Comprehensive README, CHANGELOG, and contribution guidelines.
+  - GPL-3.0 License.
 - **Unit Tests**: Added comprehensive unit tests for `services`, `storage`, and `validation` packages (33 tests total).
-- **Graceful Error Handling**: Replaced critical panics with graceful error handling and UI feedback.
-- **GPL-3.0 License**: Officially licensed the project under GPLv3.
 
 ### Fixed
 - Fixed app crash issues related to storage initialization failures.

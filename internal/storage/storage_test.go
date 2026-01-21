@@ -1,8 +1,11 @@
 package storage
 
 import (
+	"encoding/json"
+	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"llm-desk/internal/models"
@@ -20,6 +23,7 @@ func setupTestStorage(t *testing.T) (*Storage, func()) {
 	storage := &Storage{
 		dataDir:  tempDir,
 		filename: filepath.Join(tempDir, "providers.json"),
+		keyring:  NewKeyringStore(),
 	}
 
 	cleanup := func() {
@@ -245,5 +249,108 @@ func TestStorage_Settings(t *testing.T) {
 	}
 	if loaded.Theme != "dark" {
 		t.Errorf("Expected theme 'dark', got '%s'", loaded.Theme)
+	}
+}
+
+func TestStorage_EncryptedExportImport(t *testing.T) {
+	storage, cleanup := setupTestStorage(t)
+	defer cleanup()
+
+	exportPath := filepath.Join(storage.dataDir, "encrypted_export.bin")
+	passphrase := "secret-pass"
+
+	testData := &models.LLMDeskData{
+		Version:  "1.0",
+		Metadata: models.Metadata{CreatedAt: "now", Generator: "test"},
+		Providers: []models.Provider{
+			{ID: "p1", Name: "Encrypted P1", Endpoints: models.Endpoints{}, Limits: []models.Limit{}, Models: []models.Model{}},
+		},
+	}
+
+	// 1. Export Encrypted
+	if err := storage.ExportEncryptedToFile(exportPath, testData, passphrase); err != nil {
+		t.Fatalf("Encrypted export failed: %v", err)
+	}
+
+	// 2. Verify file is not plaintext JSON
+	content, _ := os.ReadFile(exportPath)
+	if strings.Contains(string(content), "Encrypted P1") {
+		t.Error("Exported file appears to be plaintext, expected encrypted")
+	}
+
+	// 3. Import with WRONG passphrase should fail
+	_, err := storage.ImportEncryptedFromFile(exportPath, "wrong")
+	if err == nil {
+		t.Error("Import with wrong passphrase should have failed")
+	}
+
+	// 4. Import with CORRECT passphrase should succeed
+	imported, err := storage.ImportEncryptedFromFile(exportPath, passphrase)
+	if err != nil {
+		t.Fatalf("Import with correct passphrase failed: %v", err)
+	}
+
+	if imported.Providers[0].Name != "Encrypted P1" {
+		t.Errorf("Imported data mismatch, got name: %s", imported.Providers[0].Name)
+	}
+}
+
+func TestStorage_Scrubbing(t *testing.T) {
+	storage, cleanup := setupTestStorage(t)
+	defer cleanup()
+
+	testProviders := []models.Provider{
+		{
+			ID:   "secret-provider",
+			Name: "Secret Provider",
+			Credentials: models.Credentials{
+				APIKeys: []string{"super-secret-key-123"},
+			},
+			Endpoints: models.Endpoints{OpenAI: "https://api.example.com"},
+			Limits:    []models.Limit{},
+			Models:    []models.Model{},
+		},
+	}
+
+	// Save
+	if err := storage.Save(testProviders); err != nil {
+		t.Fatalf("Save failed: %v", err)
+	}
+
+	// 1. Verify Load still returns the keys (they should be injected from keyring)
+	loaded, err := storage.Load()
+	if err != nil {
+		t.Fatalf("Load failed: %v", err)
+	}
+	if len(loaded[0].Credentials.APIKeys) == 0 || loaded[0].Credentials.APIKeys[0] != "super-secret-key-123" {
+		t.Errorf("Expected keys to be available after Load, got %v", loaded[0].Credentials.APIKeys)
+	}
+
+	// 2. EXPLICITLY check the JSON file content to ensure keys are NOT there
+	file, err := os.Open(storage.filename)
+	if err != nil {
+		t.Fatalf("Failed to open storage file: %v", err)
+	}
+	defer file.Close()
+
+	content, err := io.ReadAll(file)
+	if err != nil {
+		t.Fatalf("Failed to read storage file: %v", err)
+	}
+
+	if strings.Contains(string(content), "super-secret-key-123") {
+		t.Error("SECURITY BREACH: Persistent JSON file contains plaintext API key!")
+	}
+
+	// 3. Verify apiKeys field is an empty array in the JSON
+	var raw []map[string]interface{}
+	if err := json.Unmarshal(content, &raw); err != nil {
+		t.Fatalf("Failed to unmarshal raw JSON: %v", err)
+	}
+
+	creds := raw[0]["credentials"].(map[string]interface{})
+	keys := creds["apiKeys"].([]interface{})
+	if len(keys) != 0 {
+		t.Errorf("Expected apiKeys to be empty in JSON, got %v", keys)
 	}
 }

@@ -15,6 +15,7 @@ type Storage struct {
 	dataDir  string
 	filename string
 	mu       sync.RWMutex
+	keyring  *KeyringStore
 }
 
 // New creates a new Storage instance
@@ -32,6 +33,7 @@ func New() (*Storage, error) {
 	return &Storage{
 		dataDir:  appDir,
 		filename: filepath.Join(appDir, "providers.json"),
+		keyring:  NewKeyringStore(),
 	}, nil
 }
 
@@ -40,7 +42,7 @@ func (s *Storage) GetDataDir() string {
 	return s.dataDir
 }
 
-// Load reads providers from the JSON file
+// Load reads providers from the JSON file and injects keys from keyring
 func (s *Storage) Load() ([]models.Provider, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
@@ -58,15 +60,60 @@ func (s *Storage) Load() ([]models.Provider, error) {
 		return nil, err
 	}
 
+	// Handle secure key migration and injection
+	needsMigration := false
+	for i := range providers {
+		p := &providers[i]
+
+		// 1. Check if keys exist in JSON (needs migration)
+		if len(p.Credentials.APIKeys) > 0 {
+			if err := s.keyring.SetKeys(p.ID, p.Credentials.APIKeys); err != nil {
+				// Log error but continue with what we have
+				continue
+			}
+			needsMigration = true
+		}
+
+		// 2. Fetch/Inject keys from keyring
+		keys, err := s.keyring.GetKeys(p.ID)
+		if err != nil {
+			// Log error
+			continue
+		}
+		p.Credentials.APIKeys = keys
+	}
+
+	// 3. If migration happened, we need to save the scrubbed version to JSON
+	if needsMigration {
+		go func() {
+			s.Save(providers)
+		}()
+	}
+
 	return providers, nil
 }
 
-// Save writes providers to the JSON file
+// Save writes providers to the JSON file after securely storing keys in keyring
 func (s *Storage) Save(providers []models.Provider) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	data, err := json.MarshalIndent(providers, "", "  ")
+	// Create a sanitized copy for JSON storage (scrubbed of keys)
+	scrubbed := make([]models.Provider, len(providers))
+	for i, p := range providers {
+		// Save keys to keyring first
+		if len(p.Credentials.APIKeys) > 0 {
+			if err := s.keyring.SetKeys(p.ID, p.Credentials.APIKeys); err != nil {
+				return err
+			}
+		}
+
+		// Copy and scrub
+		scrubbed[i] = p
+		scrubbed[i].Credentials.APIKeys = []string{}
+	}
+
+	data, err := json.MarshalIndent(scrubbed, "", "  ")
 	if err != nil {
 		return err
 	}
@@ -87,6 +134,24 @@ func (s *Storage) ExportToFile(filepath string, data *models.LLMDeskData) error 
 	return os.WriteFile(filepath, jsonData, 0644)
 }
 
+// ExportEncryptedToFile exports data to a specified file path with encryption
+func (s *Storage) ExportEncryptedToFile(filepath string, data *models.LLMDeskData, passphrase string) error {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	jsonData, err := json.MarshalIndent(data, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	encryptedData, err := Encrypt(jsonData, passphrase)
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(filepath, encryptedData, 0644)
+}
+
 // ImportFromFile reads and parses a backup file
 func (s *Storage) ImportFromFile(filepath string) (*models.LLMDeskData, error) {
 	data, err := os.ReadFile(filepath)
@@ -102,11 +167,43 @@ func (s *Storage) ImportFromFile(filepath string) (*models.LLMDeskData, error) {
 	return &llmData, nil
 }
 
-// Clear removes all stored data
+// ImportEncryptedFromFile reads and decrypts a backup file
+func (s *Storage) ImportEncryptedFromFile(filepath string, passphrase string) (*models.LLMDeskData, error) {
+	encryptedData, err := os.ReadFile(filepath)
+	if err != nil {
+		return nil, err
+	}
+
+	jsonData, err := Decrypt(encryptedData, passphrase)
+	if err != nil {
+		return nil, err
+	}
+
+	var llmData models.LLMDeskData
+	if err := json.Unmarshal(jsonData, &llmData); err != nil {
+		return nil, err
+	}
+
+	return &llmData, nil
+}
+
+// Clear removes all stored data from JSON and keyring
 func (s *Storage) Clear() error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	// 1. Try to load providers to find IDs to delete from keyring
+	data, err := os.ReadFile(s.filename)
+	if err == nil {
+		var providers []models.Provider
+		if err := json.Unmarshal(data, &providers); err == nil {
+			for _, p := range providers {
+				s.keyring.DeleteKeys(p.ID)
+			}
+		}
+	}
+
+	// 2. Delete the file
 	if err := os.Remove(s.filename); err != nil && !errors.Is(err, os.ErrNotExist) {
 		return err
 	}
