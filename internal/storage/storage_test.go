@@ -354,3 +354,61 @@ func TestStorage_Scrubbing(t *testing.T) {
 		t.Errorf("Expected apiKeys to be empty in JSON, got %v", keys)
 	}
 }
+
+func TestStorage_ExportMinified(t *testing.T) {
+	storage, cleanup := setupTestStorage(t)
+	defer cleanup()
+
+	exportPath := filepath.Join(storage.dataDir, "export_minified.json")
+
+	testData := &models.LLMDeskData{
+		Version: "1.0",
+		Metadata: models.Metadata{
+			CreatedAt:  "2026-01-01T00:00:00Z",
+			ModifiedAt: "2026-01-01T00:00:00Z",
+			Generator:  "test",
+		},
+		Providers: []models.Provider{
+			{
+				ID:        "p1",
+				Name:      "Provider 1",
+				Endpoints: models.Endpoints{OpenAI: "url"},
+				Limits:    []models.Limit{},
+				Models:    []models.Model{},
+			},
+			{
+				ID:        "p2",
+				Name:      "Provider 2",
+				Endpoints: models.Endpoints{OpenAI: "url"},
+				Limits:    []models.Limit{},
+				Models:    []models.Model{},
+			},
+		},
+	}
+
+	// Export
+	if err := storage.ExportToFile(exportPath, testData); err != nil {
+		t.Fatalf("Export failed: %v", err)
+	}
+
+	// Read content
+	content, err := os.ReadFile(exportPath)
+	if err != nil {
+		t.Fatalf("Failed to read export file: %v", err)
+	}
+
+	// Verify no newlines (except possibly EOF, but json.Marshal doesn't add one)
+	if strings.Contains(string(content), "\n") {
+		t.Error("Exported JSON contains newlines; it is not minified")
+	}
+
+	// Verify it still parses
+	var imported models.LLMDeskData
+	if err := json.Unmarshal(content, &imported); err != nil {
+		t.Errorf("Failed to parse minified JSON: %v", err)
+	}
+
+	if len(imported.Providers) != 2 {
+		t.Errorf("Expected 2 providers, got %d", len(imported.Providers))
+	}
+}

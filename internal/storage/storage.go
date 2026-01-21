@@ -134,7 +134,7 @@ func (s *Storage) ExportToFile(filepath string, data *models.LLMDeskData) error 
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
-	jsonData, err := json.MarshalIndent(data, "", "  ")
+	jsonData, err := json.Marshal(data)
 	if err != nil {
 		return err
 	}
@@ -147,7 +147,7 @@ func (s *Storage) ExportEncryptedToFile(filepath string, data *models.LLMDeskDat
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
-	jsonData, err := json.MarshalIndent(data, "", "  ")
+	jsonData, err := json.Marshal(data)
 	if err != nil {
 		return err
 	}
