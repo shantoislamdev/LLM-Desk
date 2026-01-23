@@ -10,6 +10,8 @@ vi.mock('../../wailsjs/go/main/App', () => ({
     GetCrashReporting: vi.fn(),
     SetCrashReporting: vi.fn(),
     CheckForUpdates: vi.fn(),
+    GetFollowSystemTheme: vi.fn(),
+    SetFollowSystemTheme: vi.fn(),
 }));
 
 describe('useSettings', () => {
@@ -17,6 +19,7 @@ describe('useSettings', () => {
         vi.clearAllMocks();
         (WailsApp.GetTheme as any).mockResolvedValue('dark');
         (WailsApp.GetCrashReporting as any).mockResolvedValue(true);
+        (WailsApp.GetFollowSystemTheme as any).mockResolvedValue(false);
     });
 
     it('should initialize with values from the backend', async () => {

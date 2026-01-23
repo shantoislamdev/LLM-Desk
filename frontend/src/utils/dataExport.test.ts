@@ -19,8 +19,11 @@ describe('dataExport', () => {
     });
 
     it('should return false when ExportData fails', async () => {
+        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
         (WailsApp.ExportData as any).mockRejectedValue(new Error('Export error'));
         const result = await downloadExportFile();
         expect(result).toBe(false);
+        expect(consoleSpy).toHaveBeenCalled();
+        consoleSpy.mockRestore();
     });
 });
