@@ -5,37 +5,167 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
+env:
+  GO_VERSION: '1.23'
+  NODE_VERSION: '20'
+
 jobs:
-  release:
-    strategy:
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+  build-windows:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23'
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package.json
 
       - name: Install Wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
-      - name: Build Backend & Frontend
+      - name: Build Windows App
+        run: |
+          wails build -nsis -ldflags "-X 'llm-desk/internal/version.Version=${{ github.ref_name }}' -X 'llm-desk/internal/version.Commit=${{ github.sha }}'"
+
+      - name: Rename artifacts
+        shell: pwsh
+        run: |
+          $version = "${{ github.ref_name }}"
+          Move-Item -Path "build/bin/llm-desk.exe" -Destination "build/bin/LLM-Desk-$version-windows-amd64.exe" -ErrorAction SilentlyContinue
+          Move-Item -Path "build/bin/llm-desk-amd64-installer.exe" -Destination "build/bin/LLM-Desk-$version-windows-amd64-installer.exe" -ErrorAction SilentlyContinue
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-artifacts
+          path: build/bin/*.exe
+          retention-days: 1
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package.json
+
+      - name: Install Wails
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Build macOS App (Universal Binary)
+        run: |
+          wails build -platform darwin/universal -ldflags "-X 'llm-desk/internal/version.Version=${{ github.ref_name }}' -X 'llm-desk/internal/version.Commit=${{ github.sha }}'"
+
+      - name: Create DMG
+        run: |
+          version="${{ github.ref_name }}"
+          # Create a zip of the app bundle
+          cd build/bin
+          # Find the .app directory
+          app_name=$(ls -d *.app 2>/dev/null | head -1)
+          if [ -n "$app_name" ]; then
+            zip -r "LLM-Desk-${version}-darwin-universal.zip" "$app_name"
+          else
+            # If no .app, compress binaries
+            zip -r "LLM-Desk-${version}-darwin-universal.zip" *
+          fi
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-artifacts
+          path: build/bin/*.zip
+          retention-days: 1
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Linux Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-dev \
+            libwebkit2gtk-4.0-dev \
+            build-essential \
+            libayatana-appindicator3-dev \
+            librsvg2-dev
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package.json
+
+      - name: Install Wails
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Build Linux App
         run: |
           wails build -ldflags "-X 'llm-desk/internal/version.Version=${{ github.ref_name }}' -X 'llm-desk/internal/version.Commit=${{ github.sha }}'"
 
-      - name: Release Packages
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Rename artifacts
+        run: |
+          version="${{ github.ref_name }}"
+          mv build/bin/llm-desk "build/bin/LLM-Desk-${version}-linux-amd64"
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
         with:
+          name: linux-artifacts
+          path: build/bin/LLM-Desk-*
+          retention-days: 1
+
+  release:
+    needs: [build-windows, build-macos, build-linux]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+
+      - name: Display artifacts
+        run: |
+          echo "Downloaded artifacts:"
+          find release-artifacts -type f -exec ls -la {} \;
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
           files: |
-            build/bin/*
+            release-artifacts/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
