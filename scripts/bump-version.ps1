@@ -43,19 +43,26 @@ try {
     npm install --package-lock-only --silent 2>$null
     Pop-Location
 
-    # 4. Stage changes
-    Write-Host "📂 Staging changes..." -ForegroundColor Yellow
-    git add wails.json frontend/package.json frontend/package-lock.json
+    # 4. Update website/index.html JSON-LD version
+    Write-Host "📝 Updating website/index.html JSON-LD..." -ForegroundColor Yellow
+    $indexPath = "website/index.html"
+    $indexContent = Get-Content $indexPath -Raw
+    $indexContent = $indexContent -replace '"softwareVersion":\s*"[^"]*"', '"softwareVersion": "' + $Version + '"'
+    Set-Content $indexPath $indexContent -NoNewline
 
-    # 5. Commit
+    # 5. Stage changes
+    Write-Host "📂 Staging changes..." -ForegroundColor Yellow
+    git add wails.json frontend/package.json frontend/package-lock.json website/index.html
+
+    # 6. Commit
     Write-Host "💾 Committing..." -ForegroundColor Yellow
     git commit -m "chore: bump version to v$Version"
 
-    # 6. Create tag
+    # 7. Create tag
     Write-Host "🏷️  Creating tag v$Version..." -ForegroundColor Yellow
     git tag "v$Version"
 
-    # 7. Push if requested
+    # 8. Push if requested
     if ($Push) {
         Write-Host "🚀 Pushing to remote..." -ForegroundColor Yellow
         git push
