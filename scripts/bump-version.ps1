@@ -47,7 +47,8 @@ try {
     Write-Host "📝 Updating website/index.html JSON-LD..." -ForegroundColor Yellow
     $indexPath = "website/index.html"
     $indexContent = Get-Content $indexPath -Raw
-    $indexContent = $indexContent -replace '"softwareVersion":\s*"[^"]*"', '"softwareVersion": "' + $Version + '"'
+    $targetVersion = '"softwareVersion": "{0}"' -f $Version
+    $indexContent = $indexContent -replace '"softwareVersion":\s*"[^"]*"', $targetVersion
     Set-Content $indexPath $indexContent -NoNewline
 
     # 5. Stage changes
