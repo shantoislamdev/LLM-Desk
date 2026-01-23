@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRight, Plus, Trash2 } from 'lucide-react';
-import { FormInput, Toggle } from '@/components/ui';
+import { FormInput, Toggle, ConfirmationDialog } from '@/components/ui';
 import { Model, ModelFeatures, Pricing, Limit, Provider, Context } from '@/types';
 
 interface ModelFormProps {
@@ -56,6 +56,7 @@ export const ModelForm: React.FC<ModelFormProps> = ({
 
     // Validation
     const [errors, setErrors] = useState<Record<string, string>>({});
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
     // Initialize form when model changes
     useEffect(() => {
@@ -154,7 +155,11 @@ export const ModelForm: React.FC<ModelFormProps> = ({
     };
 
     const handleDelete = () => {
-        if (onDelete && window.confirm(`Are you sure you want to delete "${name}"? This action cannot be undone.`)) {
+        setIsDeleteDialogOpen(true);
+    };
+
+    const confirmDelete = () => {
+        if (onDelete) {
             onDelete();
         }
     };
@@ -375,6 +380,16 @@ export const ModelForm: React.FC<ModelFormProps> = ({
                     </div>
                 </div>
             </div>
+
+            <ConfirmationDialog
+                isOpen={isDeleteDialogOpen}
+                onClose={() => setIsDeleteDialogOpen(false)}
+                onConfirm={confirmDelete}
+                title="Delete Model"
+                message={`Are you sure you want to delete "${name}"? This action cannot be undone.`}
+                confirmText="Delete"
+                isDangerous
+            />
         </div>
     );
 };

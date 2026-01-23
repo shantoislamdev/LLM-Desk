@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ConfirmationDialog } from '@/components/ui';
 import { Snackbar } from 'minisnackbar';
 import {
     Key,
@@ -39,6 +40,7 @@ export const ProviderDetail: React.FC<ProviderDetailProps> = ({
     const [newKeyInput, setNewKeyInput] = useState('');
     const [visibleKeys, setVisibleKeys] = useState<Record<number, boolean>>({});
     const [isInventoryOpen, setIsInventoryOpen] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
     const toggleVisibility = (index: number) => {
         setVisibleKeys(prev => ({ ...prev, [index]: !prev[index] }));
@@ -64,7 +66,11 @@ export const ProviderDetail: React.FC<ProviderDetailProps> = ({
     };
 
     const handleDeleteProvider = () => {
-        if (onDeleteProvider && window.confirm(`Are you sure you want to delete "${provider.name}"? This action cannot be undone.`)) {
+        setIsDeleteDialogOpen(true);
+    };
+
+    const confirmDeleteProvider = () => {
+        if (onDeleteProvider) {
             onDeleteProvider();
         }
     };
@@ -296,6 +302,16 @@ export const ProviderDetail: React.FC<ProviderDetailProps> = ({
                     </AnimatePresence>
                 </div>
             </div>
+
+            <ConfirmationDialog
+                isOpen={isDeleteDialogOpen}
+                onClose={() => setIsDeleteDialogOpen(false)}
+                onConfirm={confirmDeleteProvider}
+                title="Delete Provider"
+                message={`Are you sure you want to delete "${provider.name}"? This action cannot be undone.`}
+                confirmText="Delete"
+                isDangerous
+            />
         </div>
     );
 };
