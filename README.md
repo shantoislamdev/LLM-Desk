@@ -93,6 +93,31 @@ We welcome contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for 
 - `internal/`: Go backend packages (services, storage, models, logger).
 - `frontend/`: React frontend application.
 
+### Version Management
+
+LLM Desk uses **Git tags as the single source of truth** for versioning. All version references are automatically synchronized during the build process.
+
+**To release a new version:**
+
+```powershell
+# Quick release (bump + push)
+.\scripts\bump-version.ps1 -Version "1.0.0" -Push
+
+# Or review before pushing
+.\scripts\bump-version.ps1 -Version "1.0.0"
+git push && git push origin v1.0.0
+```
+
+The bump script:
+- Updates `wails.json` and `package.json` metadata
+- Creates a Git commit and tag
+- Optionally pushes to trigger CI/CD
+
+When you push a version tag, GitHub Actions automatically:
+- Builds for Windows, macOS, and Linux
+- Injects the version into binaries via ldflags
+- Creates a GitHub Release with all platform builds
+
 ## 🤝 Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.

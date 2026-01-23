@@ -1,8 +1,9 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Snackbar } from 'minisnackbar';
 import { Sun, Moon, Download, Upload, AlertCircle, CheckCircle, RefreshCw } from 'lucide-react';
 import { Card } from '@/components/ui';
 import { ImportMode, ImportResult } from '@/utils/dataImport';
+import { GetVersion } from '../../wailsjs/go/main/App';
 
 interface SettingsProps {
     theme: string;
@@ -34,6 +35,14 @@ export const Settings: React.FC<SettingsProps> = React.memo(({
     const [importWarnings, setImportWarnings] = useState<string[]>([]);
     const [isCheckingUpdates, setIsCheckingUpdates] = useState(false);
     const [updateResult, setUpdateResult] = useState<any>(null);
+    const [appVersion, setAppVersion] = useState<string>('Loading...');
+
+    // Fetch version from backend on mount
+    useEffect(() => {
+        GetVersion()
+            .then(setAppVersion)
+            .catch(() => setAppVersion('Unknown'));
+    }, []);
 
     const handleImportClick = async () => {
         Snackbar.add('Importing...');
@@ -247,7 +256,7 @@ export const Settings: React.FC<SettingsProps> = React.memo(({
                     <div className="setting-row__info">
                         <h4 className="setting-row__label">Check for Updates</h4>
                         <p className="setting-row__description">
-                            Current Version: <span className="u-text-secondary">v0.0.1</span>
+                            Current Version: <span className="u-text-secondary">{appVersion}</span>
                         </p>
                     </div>
                     <button

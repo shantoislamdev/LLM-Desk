@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"embed"
+	"fmt"
 
 	"llm-desk/internal/logger"
+	"llm-desk/internal/version"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -67,7 +69,7 @@ func main() {
 			Appearance: mac.NSAppearanceNameDarkAqua,
 			About: &mac.AboutInfo{
 				Title:   "LLM Desk",
-				Message: "LLM Provider Management Desktop Application\nVersion 0.0.1\n© 2026 LLM Desk",
+				Message: fmt.Sprintf("LLM Provider Management Desktop Application\nVersion %s\n© 2026 LLM Desk", version.GetVersion()),
 			},
 		},
 	})

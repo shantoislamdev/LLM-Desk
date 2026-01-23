@@ -51,7 +51,11 @@ jobs:
       - name: Build (Linux)
         if: runner.os == 'Linux'
         run: |
-          wails build -platform linux/amd64 -tags webkit2_41
+          VERSION=${GITHUB_REF#refs/tags/}
+          COMMIT=${GITHUB_SHA::7}
+          echo "Building version: $VERSION (commit: $COMMIT)"
+          wails build -platform linux/amd64 -tags webkit2_41 \
+            -ldflags "-X llm-desk/internal/version.Version=$VERSION -X llm-desk/internal/version.Commit=$COMMIT"
           mv build/bin/llm-desk build/bin/llm-desk-linux-amd64
 
       - name: Install NSIS
@@ -65,8 +69,11 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
+          $VERSION = $env:GITHUB_REF -replace 'refs/tags/', ''
+          $COMMIT = $env:GITHUB_SHA.Substring(0, 7)
+          Write-Host "Building version: $VERSION (commit: $COMMIT)"
           makensis /VERSION
-          wails build -platform windows/amd64 -nsis
+          wails build -platform windows/amd64 -nsis -ldflags "-X llm-desk/internal/version.Version=$VERSION -X llm-desk/internal/version.Commit=$COMMIT"
           ls -R build/bin
           mv build/bin/llm-desk.exe build/bin/llm-desk-windows-amd64.exe
           mv build/bin/*-installer.exe build/bin/llm-desk-windows-amd64-installer.exe
@@ -74,8 +81,12 @@ jobs:
       - name: Build (macOS)
         if: runner.os == 'macOS'
         run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          COMMIT=${GITHUB_SHA::7}
+          echo "Building version: $VERSION (commit: $COMMIT)"
           brew install create-dmg
-          wails build -platform darwin/universal
+          wails build -platform darwin/universal \
+            -ldflags "-X llm-desk/internal/version.Version=$VERSION -X llm-desk/internal/version.Commit=$COMMIT"
           create-dmg \
             --volname "LLM Desk Installer" \
             --window-pos 200 120 \
