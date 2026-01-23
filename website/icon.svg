@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg6" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c1917"/>
+      <stop offset="100%" stop-color="#0c0a09"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="480" height="480" rx="96" fill="url(#bg6)"/>
+  <rect x="16" y="16" width="480" height="480" rx="96" fill="none" stroke="#292524" stroke-width="2"/>
+
+  <!-- 3D Cube representing data/models -->
+  <!-- Top face -->
+  <polygon points="256,112 384,184 256,256 128,184" fill="#D9795F"/>
+
+  <!-- Left face -->
+  <polygon points="128,184 256,256 256,384 128,312" fill="#D9795F" opacity="0.6"/>
+
+  <!-- Right face -->
+  <polygon points="384,184 384,312 256,384 256,256" fill="#D9795F" opacity="0.35"/>
+
+  <!-- Top highlight -->
+  <polygon points="256,136 320,172 256,208 192,172" fill="#FAFAF9" opacity="0.15"/>
+</svg>

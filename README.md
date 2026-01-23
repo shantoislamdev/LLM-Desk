@@ -107,6 +107,14 @@ Contributions are what make the open source community such an amazing place to l
 
 Distributed under the **GPL-3.0 License**. See [LICENSE](LICENSE) for more information.
 
+## 👤 Author
+
+**Shanto Islam**
+
+- Website: [shantoislamdev.web.app](https://shantoislamdev.web.app)
+- GitHub: [@shantoislamdev](https://github.com/shantoislamdev)
+- Email: shantoislamdev@gmail.com
+
 ## 🙏 Acknowledgments
 
 - [Wails](https://wails.io) - The framework that makes this possible.

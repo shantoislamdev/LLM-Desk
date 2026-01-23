@@ -3,6 +3,21 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "description": "A powerful, cross-platform desktop application for managing your LLM providers, models, and API keys locally.",
+  "author": {
+    "name": "Shanto Islam",
+    "email": "shantoislamdev@gmail.com",
+    "url": "https://shantoislamdev.web.app"
+  },
+  "license": "GPL-3.0",
+  "homepage": "https://github.com/shantoislamdev/LLM-Desk#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shantoislamdev/LLM-Desk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shantoislamdev/LLM-Desk/issues"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

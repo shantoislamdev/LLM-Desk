@@ -14,7 +14,7 @@
     "companyName": "Shanto Islam",
     "productName": "LLM Desk",
     "productVersion": "0.0.1",
-    "copyright": "Copyright © 2026 LLM Desk Contributors - Licensed under GPL-3.0",
+    "copyright": "Copyright © 2026 Shanto Islam - Licensed under GPL-3.0",
     "comments": "A cross-platform desktop app for locally managing your LLM providers, Models and API Keys"
   }
 }
