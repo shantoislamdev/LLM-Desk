@@ -35,14 +35,36 @@ jobs:
             libayatana-appindicator3-dev \
             librsvg2-dev
 
-      - name: Build Wails App
-        uses: dAppServer/wails-build-action@v3
+      - name: Set up Go
+        uses: actions/setup-go@v5
         with:
-          build-name: ${{ matrix.build.name }}
-          build-platform: ${{ matrix.build.platform }}
-          go-version: '1.23'
+          go-version: '1.24.0'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
           node-version: '20'
-          build-tags: webkit2_41
-          nsis: true
+
+      - name: Install Wails
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Build (Linux)
+        if: runner.os == 'Linux'
+        run: wails build -platform linux/amd64 -tags webkit2_41
+
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
+        run: wails build -platform windows/amd64 -nsis
+
+      - name: Build (macOS)
+        if: runner.os == 'macOS'
+        run: wails build -platform darwin/universal
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            build/bin/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
