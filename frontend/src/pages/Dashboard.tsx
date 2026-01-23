@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
+import { Snackbar } from 'minisnackbar';
 import {
     Server,
     Activity,
@@ -220,24 +221,42 @@ export const Dashboard: React.FC<DashboardProps> = React.memo(({
                     <div className="quick-actions__bg"></div>
                     <h3 className="quick-actions__title">Quick Actions</h3>
                     <div className="quick-actions__list">
-                        <button className="quick-action-btn">
-                            <div className="quick-action-btn__content">
-                                <div className="quick-action-btn__icon">
-                                    <Key size={16} />
+                        <div className="quick-action-wrapper">
+                            <button 
+                                className="quick-action-btn"
+                                onClick={() => Snackbar.add('Coming Soon: Rotate API Keys feature is under development')}
+                            >
+                                <div className="quick-action-btn__content">
+                                    <div className="quick-action-btn__icon">
+                                        <Key size={16} />
+                                    </div>
+                                    <span className="quick-action-btn__text">Rotate API Keys</span>
                                 </div>
-                                <span className="quick-action-btn__text">Rotate API Keys</span>
+                                <ArrowUpRight size={16} className="quick-action-btn__arrow" />
+                            </button>
+                            <div className="quick-action-tooltip">
+                                <Sparkles size={12} />
+                                <span>Coming Soon</span>
                             </div>
-                            <ArrowUpRight size={16} className="quick-action-btn__arrow" />
-                        </button>
-                        <button className="quick-action-btn">
-                            <div className="quick-action-btn__content">
-                                <div className="quick-action-btn__icon">
-                                    <Activity size={16} />
+                        </div>
+                        <div className="quick-action-wrapper">
+                            <button 
+                                className="quick-action-btn"
+                                onClick={() => Snackbar.add('Coming Soon: Check Latency feature is under development')}
+                            >
+                                <div className="quick-action-btn__content">
+                                    <div className="quick-action-btn__icon">
+                                        <Activity size={16} />
+                                    </div>
+                                    <span className="quick-action-btn__text">Check Latency</span>
                                 </div>
-                                <span className="quick-action-btn__text">Check Latency</span>
+                                <ArrowUpRight size={16} className="quick-action-btn__arrow" />
+                            </button>
+                            <div className="quick-action-tooltip">
+                                <Sparkles size={12} />
+                                <span>Coming Soon</span>
                             </div>
-                            <ArrowUpRight size={16} className="quick-action-btn__arrow" />
-                        </button>
+                        </div>
                         <div className="quick-actions__quote">
                             <p className="quick-actions__quote-text">"Efficiency is doing things right; effectiveness is doing the right things."</p>
                         </div>
