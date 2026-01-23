@@ -15,7 +15,7 @@ type Storage struct {
 	dataDir  string
 	filename string
 	mu       sync.RWMutex
-	keyring  *KeyringStore
+	keyring  KeyringManager
 }
 
 // New creates a new Storage instance

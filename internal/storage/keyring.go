@@ -5,20 +5,28 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/zalando/go-keyring"
 	"llm-desk/internal/logger"
+
+	"github.com/zalando/go-keyring"
 )
 
 const (
-	keyringService = "llm-desk"
+	keyringService    = "llm-desk"
 	keyringUserPrefix = "provider_"
 )
+
+// KeyringManager defines the interface for keyring operations
+type KeyringManager interface {
+	SetKeys(providerID string, keys []string) error
+	GetKeys(providerID string) ([]string, error)
+	DeleteKeys(providerID string) error
+}
 
 // KeyringStore handles secure storage of API keys using OS-native keyring
 type KeyringStore struct{}
 
 // NewKeyringStore creates a new KeyringStore instance
-func NewKeyringStore() *KeyringStore {
+func NewKeyringStore() KeyringManager {
 	return &KeyringStore{}
 }
 

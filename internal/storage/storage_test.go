@@ -23,7 +23,7 @@ func setupTestStorage(t *testing.T) (*Storage, func()) {
 	storage := &Storage{
 		dataDir:  tempDir,
 		filename: filepath.Join(tempDir, "providers.json"),
-		keyring:  NewKeyringStore(),
+		keyring:  &MockKeyringStore{store: make(map[string]string)},
 	}
 
 	cleanup := func() {
@@ -31,6 +31,44 @@ func setupTestStorage(t *testing.T) (*Storage, func()) {
 	}
 
 	return storage, cleanup
+}
+
+type MockKeyringStore struct {
+	store map[string]string
+}
+
+func (m *MockKeyringStore) SetKeys(providerID string, keys []string) error {
+	if m.store == nil {
+		m.store = make(map[string]string)
+	}
+	data, err := json.Marshal(keys)
+	if err != nil {
+		return err
+	}
+	m.store[providerID] = string(data)
+	return nil
+}
+
+func (m *MockKeyringStore) GetKeys(providerID string) ([]string, error) {
+	if m.store == nil {
+		return []string{}, nil
+	}
+	data, ok := m.store[providerID]
+	if !ok {
+		return []string{}, nil
+	}
+	var keys []string
+	if err := json.Unmarshal([]byte(data), &keys); err != nil {
+		return nil, err
+	}
+	return keys, nil
+}
+
+func (m *MockKeyringStore) DeleteKeys(providerID string) error {
+	if m.store != nil {
+		delete(m.store, providerID)
+	}
+	return nil
 }
 
 func TestStorage_LoadEmpty(t *testing.T) {
