@@ -87,5 +87,10 @@ jobs:
       - name: Install Wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
-      - name: Build Check
+      - name: Build Check (Linux)
+        if: runner.os == 'Linux'
+        run: wails build -s -tags webkit2_41
+
+      - name: Build Check (Windows/macOS)
+        if: runner.os != 'Linux'
         run: wails build -s
