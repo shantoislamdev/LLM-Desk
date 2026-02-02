@@ -6,7 +6,7 @@
 ![React Version](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 
-> **LLM Desk** is a powerful, cross-platform desktop application for managing your LLM providers, models, and API keys locally. built with Go (Wails) and React.
+**LLM Desk** is a powerful, cross-platform desktop application for managing your LLM providers, models, and API keys locally. built with Go (Wails) and React.
 
 
 ## ✨ Features
